@@ -1,0 +1,4 @@
+boot/isodir/
+*.o
+*.bin
+*.iso
