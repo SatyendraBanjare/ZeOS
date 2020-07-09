@@ -1,3 +1,5 @@
+%include "include/gdt.asm"
+
 BITS 32
  
 global load_kernel
