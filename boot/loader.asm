@@ -1,4 +1,4 @@
-%include "include/gdt.asm"
+%include "boot/include/gdt.asm"
 
 BITS 32
  
