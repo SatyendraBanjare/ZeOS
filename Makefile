@@ -54,7 +54,7 @@ all: zeos.iso
 	${AS} -i/boot/include -felf32 $< -o $@
 
 zeos.bin: ${OBJ}
-	${CC} -T linker.ld -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc
+	${CC} -T misc/linker.ld -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc
 
 check-multiboot: zeos.bin
 	grub-file --is-x86-multiboot zeos.bin
@@ -63,7 +63,7 @@ zeos.iso: check-multiboot
 	rm -rf isodir/
 	mkdir -p isodir/boot/grub
 	cp zeos.bin isodir/boot/zeos.bin
-	cp grub.cfg isodir/boot/grub/grub.cfg
+	cp misc/grub.cfg isodir/boot/grub/grub.cfg
 	grub-mkrescue -o zeos.iso isodir
 
 run:
