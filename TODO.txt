@@ -1,1 +1,13 @@
 Prettify asm code to follow more standard convention.
+
+Make a Shell.
+	1. Create Syscalls functions.
+	2. Create memory functions. like Malloc.
+	3. Have a command to create child process and create a new shell. 
+		3.1 SHELL 1 -> SHELL 2. 
+		if Shell 2 exists
+			return  to Shell 1.
+		3.2 some basic commands.
+		ls , cd , echo, some basic functions
+	4. Make a File system.
+	5. Mounting Features ??	
