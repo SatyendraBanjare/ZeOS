@@ -1,4 +1,4 @@
-boot/isodir/
+isodir/
 *.o
 *.bin
 *.iso
