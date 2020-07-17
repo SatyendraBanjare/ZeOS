@@ -1,11 +1,4 @@
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-
-#if defined(__linux__)
-#error "You are not using a cross-compiler, you will most certainly run into trouble"
-#endif
-
+#include "terminal.h"
 
 enum vga_color {
     VGA_COLOR_BLACK = 0,
@@ -106,11 +99,4 @@ void terminal_write(const char* data, size_t size) {
 
 void terminal_writestring(const char* data) {
     terminal_write(data, strlen(data));
-}
-
-
-void kernel_main(void) {
-    terminal_initialize();
-    terminal_writestring("Finally Booted successfully !!\n");
-    terminal_writestring("Hello, world!!!\n");
 }
