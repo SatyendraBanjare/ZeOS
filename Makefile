@@ -39,7 +39,7 @@ AS= nasm
 CFLAGS = -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 
 
-C_SOURCES = $(wildcard kernel/*.c)
+C_SOURCES = $(wildcard kernel/*.c kernel/terminal/*.c)
 ASM_SOURCES = $(wildcard boot/*.asm)
 
 OBJ = ${C_SOURCES:.c=.o} ${ASM_SOURCES:.asm=.o}
@@ -73,5 +73,6 @@ clean:
 	rm -rf isodir/
 	rm -rf boot/*.o
 	rm -rf kernel/*.o
+	rm -rf kernel/terminal/*.o
 	rm -rf *.bin
 	rm -rf	*.iso
