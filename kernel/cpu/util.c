@@ -1,89 +1,31 @@
-// common.c -- Defines some global functions.
-//             From JamesM's kernel development tutorials.
+#include <util.h>
 
-#include "util.h"
-
-// Write a byte out to the specified port.
-void outb(u16int port, u8int value)
+/*
+* Write to a port.
+*/
+void outb(uint16_t port, uint8_t value)
 {
-    asm volatile ("outb %1, %0" : : "dN" (port), "a" (value));
+    asm volatile("out %%al, %%dx" : : "a" (value), "d" (port));
 }
 
-u8int inb(u16int port)
+void outw(uint16_t port, uint16_t value)
 {
-    u8int ret;
-    asm volatile("inb %1, %0" : "=a" (ret) : "dN" (port));
-    return ret;
+    asm volatile("out %%al, %%dx" : : "a" (value), "d" (port));
 }
 
-u16int inw(u16int port)
+/*
+* read from a port.
+*/
+uint8_t inb(uint16_t port)
 {
-    u16int ret;
-    asm volatile ("inw %1, %0" : "=a" (ret) : "dN" (port));
-    return ret;
+    uint8_t result;
+    asm("in %%dx, %%al" : "=a" (result) : "d" (port));
+    return result;
 }
 
-// Copy len bytes from src to dest.
-void memcpy(u8int *dest, const u8int *src, u32int len)
+uint16_t inw(uint16_t port)
 {
-    const u8int *sp = (const u8int *)src;
-    u8int *dp = (u8int *)dest;
-    for(; len != 0; len--) *dp++ = *sp++;
-}
-
-// Write len copies of val into dest.
-void memset(u8int *dest, u8int val, u32int len)
-{
-    u8int *temp = (u8int *)dest;
-    for ( ; len != 0; len--) *temp++ = val;
-}
-
-// Compare two strings. Should return -1 if 
-// str1 < str2, 0 if they are equal or 1 otherwise.
-int strcmp(char *str1, char *str2)
-{
-      int i = 0;
-      int failed = 0;
-      while(str1[i] != '\0' && str2[i] != '\0')
-      {
-          if(str1[i] != str2[i])
-          {
-              failed = 1;
-              break;
-          }
-          i++;
-      }
-      // why did the loop exit?
-      if( (str1[i] == '\0' && str2[i] != '\0') || (str1[i] != '\0' && str2[i] == '\0') )
-          failed = 1;
-  
-      return failed;
-}
-
-// Copy the NULL-terminated string src into dest, and
-// return dest.
-char *strcpy(char *dest, const char *src)
-{
-    do
-    {
-      *dest++ = *src++;
-    }
-    while (*src != 0);
-}
-
-// Concatenate the NULL-terminated string src onto
-// the end of dest, and return dest.
-char *strcat(char *dest, const char *src)
-{
-    while (*dest != 0)
-    {
-        *dest = *dest++;
-    }
-
-    do
-    {
-        *dest++ = *src++;
-    }
-    while (*src != 0);
-    return dest;
+    uint16_t result;
+    asm("in %%dx, %%ax" : "=a" (result) : "d" (port));
+    return result;
 }
