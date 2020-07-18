@@ -1,10 +1,10 @@
 CC = ~/build-i686-elf/linux/output/bin/i686-elf-gcc
 AS= nasm
 
-CFLAGS = -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+CFLAGS = -Iinclude -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 
 C_SOURCES = $(wildcard kernel/*.c kernel/terminal/*.c)
-ASM_SOURCES = $(wildcard boot/*.asm boot/include/*.asm)
+ASM_SOURCES = $(wildcard boot/*.asm )
 
 OBJ = ${C_SOURCES:.c=.o} ${ASM_SOURCES:.asm=.o}
 
@@ -36,6 +36,7 @@ run:
 clean:
 	rm -rf isodir/
 	rm -rf boot/*.o
+	rm -rf boot/include/*.o
 	rm -rf kernel/*.o
 	rm -rf kernel/terminal/*.o
 	rm -rf *.bin
