@@ -1,4 +1,6 @@
 %include "boot/include/gdt.asm"
+%include "boot/include/idt.asm"
+%include "boot/include/interrupt.asm"
 
 BITS 32
 

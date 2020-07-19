@@ -13,10 +13,3 @@ load_gdt:
     jmp 0x08:.flush   ; 0x08 is the offset to our code segment: Far jump!
 .flush:
     ret
-
-[GLOBAL load_idt]    ; Allows the C code to call load_idt().
-
-load_idt:
-    mov eax, [esp+4]  ; Get the pointer to the IDT, passed as a parameter. 
-    lidt [eax]        ; Load the IDT pointer.
-    ret
