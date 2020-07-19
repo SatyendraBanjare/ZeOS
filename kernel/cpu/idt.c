@@ -6,7 +6,8 @@ extern void load_idt(uint32_t IDT_Ptr);
 idt_entry_t idt_entries[MAX_IDT_ENTRIES_COUNT];
 idt_ptr_t idt_ptr;
 
-static void make_idt_entry(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags)
+// This will be used by install_isr() in isr.c
+void make_idt_entry(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags)
 {
     idt_entries[num].base_lo = base & 0xFFFF;
     idt_entries[num].base_hi = (base >> 16) & 0xFFFF;

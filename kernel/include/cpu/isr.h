@@ -6,6 +6,8 @@
 #include <stdbool.h>
 
 #include "state.h"
+#include "util.h"
+#include "idt.h"
 
 /* ISRs reserved for CPU exceptions */
 extern void isr0();
@@ -76,6 +78,10 @@ extern void irq15();
 #define IRQ14 46
 #define IRQ15 47
 
-void interrupt_handler();
+
+typedef void (*isr_t)(cpu_state*);
+
+void irq_handler();
+void isr_handler();
 
 #endif

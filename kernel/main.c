@@ -1,6 +1,7 @@
 #include "include/multiboot.h"
 #include "include/cpu/gdt.h"
 #include "include/cpu/idt.h"
+#include "include/cpu/isr.h"
 #include "include/terminal/terminal.h"
 
 #if defined(__linux__)
