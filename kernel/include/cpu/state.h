@@ -1,6 +1,10 @@
 #ifndef CPU_STATE_H
 #define CPU_STATE_H
 
+/*
+* This describes the Registers at any given point of
+* time thus describing the cpu state completely.
+*/
 typedef struct {
    uint32_t ds; /* Data segment selector */
    uint32_t edi, esi, ebp, useless, ebx, edx, ecx, eax; /* Pushed by pusha. */
