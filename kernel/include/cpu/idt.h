@@ -5,9 +5,11 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+#include "isr.h"
 #include "state.h"
 
-#define IDT_ENTRIES_COUNT 256 
+#define MAX_IDT_ENTRIES_COUNT 256 
+// check here : https://wiki.osdev.org/Interrupt_Descriptor_Table
 
 // Access methods defined in the asm files.
 extern void load_gdt();
@@ -31,6 +33,6 @@ struct idt_ptr_struct
 
 typedef struct idt_ptr_struct idt_ptr_t;
 
-
+void init_idt();
 
 #endif
