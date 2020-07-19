@@ -22,7 +22,7 @@ void kernel_main(void) {
 
 	init_descriptor_tables();
 
-	    terminal_initialize();
+	terminal_initialize();
     terminal_writestring("Finally Booted successfully !!\n");
     terminal_writestring("Hello, world!!!\n");
 
