@@ -1,4 +1,5 @@
-#include "terminal/terminal.h"
+#include "include/multiboot.h"
+#include "include/terminal/terminal.h"
 
 #if defined(__linux__)
 #error "You are not using a cross-compiler, you will most certainly run into trouble"

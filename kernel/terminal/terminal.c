@@ -1,4 +1,4 @@
-#include "terminal.h"
+#include "../include/terminal/terminal.h"
 
 enum vga_color {
     VGA_COLOR_BLACK = 0,

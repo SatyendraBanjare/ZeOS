@@ -1,4 +1,4 @@
-#include <util.h>
+#include "../include/cpu/util.h"
 
 /*
 * Write to a port.
