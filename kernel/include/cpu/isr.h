@@ -79,9 +79,12 @@ extern void irq15();
 #define IRQ15 47
 
 
-typedef void (*isr_t)(cpu_state*);
+typedef void (*state_t)(cpu_state*);
 
-void irq_handler();
-void isr_handler();
+extern void irq_handler(cpu_state* state);
+extern void isr_handler(cpu_state* state);
+void register_interrupt_handler(uint8_t n, state_t handler);
+void isr_install();
+void irq_install();
 
 #endif

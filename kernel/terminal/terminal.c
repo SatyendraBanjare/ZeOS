@@ -30,7 +30,7 @@ static inline uint16_t vga_entry(unsigned char uc, uint8_t color) {
 }
 
 
-size_t strlen(const char* str) {
+size_t zstrlen(const char* str) {
     size_t len = 0;
     while (str[len] != 0) {
         len++;
@@ -98,5 +98,5 @@ void terminal_write(const char* data, size_t size) {
 
 
 void terminal_writestring(const char* data) {
-    terminal_write(data, strlen(data));
+    terminal_write(data, zstrlen(data));
 }

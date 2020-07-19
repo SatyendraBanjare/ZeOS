@@ -14,14 +14,20 @@ void init_descriptor_tables(){
 	init_gdt();
 
 	//initialize IDT table
-	init_idt();
+	isr_install();
+	irq_install();
 }
 
 void kernel_main(void) {
 
 	init_descriptor_tables();
 
-    terminal_initialize();
+	    terminal_initialize();
     terminal_writestring("Finally Booted successfully !!\n");
     terminal_writestring("Hello, world!!!\n");
+
+
+	asm("int $2");
+    asm("int $3");
+
 }
