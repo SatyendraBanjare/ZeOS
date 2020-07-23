@@ -26,7 +26,7 @@ all: zeos.iso
 	${AS} -i/boot/include -felf32 $< -o $@
 
 zeos.bin: ${OBJ}
-	${CC} -T conf/linker.ld -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc
+	${CC} -T conf/linker.ld -Ttext 0x1000 -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc
 
 check-multiboot: zeos.bin
 	grub-file --is-x86-multiboot zeos.bin
@@ -40,6 +40,10 @@ zeos.iso: check-multiboot
 
 run:
 	qemu-system-i386 -cdrom zeos.iso
+
+debug:
+	qemu-system-i386 -s -cdrom zeos.iso -d guest_errors,int &
+	${GDB} -ex "target remote localhost:1234"
 
 clean:
 	rm -rf isodir/
