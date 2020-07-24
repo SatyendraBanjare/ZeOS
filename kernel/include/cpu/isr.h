@@ -8,6 +8,7 @@
 #include "state.h"
 #include "util.h"
 #include "idt.h"
+#include "../drivers/keyboard.h"
 
 /* ISRs reserved for CPU exceptions */
 extern void isr0();
