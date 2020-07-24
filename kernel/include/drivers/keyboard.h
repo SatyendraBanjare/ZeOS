@@ -10,9 +10,7 @@
 #include "../terminal/terminal.h"
 
 #include "../codes.h"
-#include "../UserCredentials.h"
 
 void init_keyboard();
-int has_access();
 
 #endif
