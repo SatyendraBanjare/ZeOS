@@ -8,8 +8,10 @@
 #error "You are not using a cross-compiler, you will most certainly run into trouble"
 #endif
 
+//check flag for if username & password are correct
+int shell_access_flag = 0;
+
 void init_descriptor_tables(){
-	
 	//initialize GDT table
 	init_gdt();
 
@@ -20,14 +22,17 @@ void init_descriptor_tables(){
 
 void kernel_main(void) {
 
+	//initialize isr &irq to help input the 
 	init_descriptor_tables();
 
-	terminal_initialize();
-    terminal_writestring("Finally Booted successfully !!\n");
-    terminal_writestring("Hello, world!!!\n");
+	while(shell_access_flag == 0){
+		if(has_access() == 1)
+		{
+			shell_access_flag = 1;
+			start_execution();
+		}
+	}
 
 
-	asm("int $2");
-    asm("int $3");
 
 }
