@@ -39,8 +39,7 @@ size_t zstrlen(const char* str) {
 }
 
 
-static const size_t VGA_WIDTH = 80;
-static const size_t VGA_HEIGHT = 25;
+
 
 size_t terminal_row;
 size_t terminal_column;
