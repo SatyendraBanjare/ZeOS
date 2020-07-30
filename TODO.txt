@@ -1,5 +1,25 @@
 Prettify asm code to follow more standard convention.
 
+1.  Implement the FS acc to JM tutorial. 
+	Implement Linkedlist structure of Directories. Each directory can have files and directories.
+
+	if touch
+		parentdir.No_Files++
+		files.dir = parentdir
+		file_blob = buff
+		file_blob.type = file (Text file bydefault)
+	endif
+
+	if mkdir
+		node_count = parendir.no_child++
+		parendir.nodes[node_count].name = "foo"
+		init_child_dir(foo,parentdir)
+			% this should init and empty linked list%
+			% init the backlink to parentdir and its parentdir %
+	end
+
+
+
 Make a Shell.
 	1. Create Syscalls functions.
 	2. Create memory functions. like Malloc.
