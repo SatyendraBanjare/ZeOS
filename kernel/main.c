@@ -20,19 +20,28 @@ void init_descriptor_tables(){
 	irq_install();
 }
 
+void start_execution(){
+	zprint("HI");
+
+	 asm("int $2");
+    asm("int $3");
+}
+
 void kernel_main(void) {
 
 	//initialize isr &irq to help input the 
 	init_descriptor_tables();
 
-	while(shell_access_flag == 0){
-		if(has_access() == 1)
-		{
-			shell_access_flag = 1;
-			start_execution();
-		}
-	}
+	// User Acces Stuff
+	// while(shell_access_flag == 0){
+	// 	if(has_access() == 1)
+	// 	{
+	// 		shell_access_flag = 1;
+	// 		start_execution();
+	// 	}
+	// }
 
+	start_execution();
 
 
 }

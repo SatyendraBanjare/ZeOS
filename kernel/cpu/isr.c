@@ -113,13 +113,13 @@ char *exception_messages[] = {
 };
 
 void isr_handler(cpu_state *state) {
-    terminal_writestring("received interrupt: ");
+    zprint("received interrupt: ");
     char s[3];
     int_to_ascii(state->int_no, s);
-    terminal_writestring(s);
-    terminal_writestring("\n");
-    terminal_writestring(exception_messages[state->int_no]);
-    terminal_writestring("\n");
+    zprint(s);
+    zprint("\n");
+    zprint(exception_messages[state->int_no]);
+    zprint("\n");
 }
 
 void irq_handler(cpu_state *state) {
@@ -142,5 +142,5 @@ void register_interrupt_handler(uint8_t n, state_t handler) {
 void irq_install(){
 	asm volatile("sti");
 	init_timer(50);
-    init_keyboard();
+    // init_keyboard();
 }
