@@ -43,4 +43,13 @@ Operating system Hobby Project
 - http://www.jamesmolloy.co.uk/tutorial_html
 - https://www.cs.utah.edu/flux/oskit/examples.html
 - http://os.inf.tu-dresden.de/fiasco/
-- File System : https://wiki.osdev.org/VFS, http://e2fsprogs.sourceforge.net/ext2intro.html , https://www.nongnu.org/ext2-doc/ext2.html
+
+File System : 
+- https://wiki.osdev.org/VFS 
+- http://e2fsprogs.sourceforge.net/ext2intro.html
+- https://www.nongnu.org/ext2-doc/ext2.html
+
+Using Grub :
+- https://www.dedoimedo.com/computers/grub-2.html
+- https://blog.fpmurphy.com/2010/06/grub2-modules.html
+- https://wiki.osdev.org/Writing_GRUB_Modules
