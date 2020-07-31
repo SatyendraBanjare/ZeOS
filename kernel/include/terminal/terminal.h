@@ -10,7 +10,7 @@
 #include "../cpu/isr.h"
 
 #define VGA_WIDTH 80
-#define VGA_HEIGHT 25
+#define VGA_HEIGHT 24
 
 #define VIDEO_ADDRESS 0xb8000
 
@@ -21,18 +21,19 @@
 #define CMD_COLOR       0x0f
 #define CURSOR_COLOR    0x0a
 #define HEADER_COLOR    0x4e
-#define FOOTER_COLOR    0x01
+#define FOOTER_COLOR    0x10
 
 /* Public kernel API */
 void clear_screen();
-void zprint_at(char *message, int col, int row);
+void zprint_at(char *message, int col, int row, int color);
 void zprint(char *message);
 void zprint_backspace();
 void zprint_left();
 void zprint_right();
 void clear_screen_full();
-int print_char_last(char c, int col, int row);
-void zprint_at_last(char *message);
+void zprint_footer(char *message);
+void zprint_header(char *message);
+void zprint_new_line(char *message);
 
 // void terminal_initialize(void);
 // void terminal_writestring(const char* data);

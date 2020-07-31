@@ -9,6 +9,41 @@ footer : current work directory , arg counts
 
 #include "../include/shell/shell.h"
 
+char * alias = "Zeus";
+int uptime;
+char * dir = "/DEV/"
+
+char * get_alias(){
+	return alias;
+}
+
+int get_uptime(){
+
+}
+
+void print_header(){
+	zprint_header("                               WELCOME TO ZEOS !!                               ");
+}
+
+
+void print_footer(){
+	zprint_footer("CURRENT DIRECTORY : /DEV/");
+}
+
+void print_blank(){zprint("\n  \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \
+ \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n  \
+ \n \n \n \n \n \n \n \n \n \n ");
+}
+
+void init_shell(){
+    // irq_install();
+    clear_screen_full();
+    print_header();
+    print_footer();
+    print_blank();
+    clear_screen(get_alias());
+}
+
 void manage_input(char *input){
     if (strcmp(input, "END") == 0) {
         zprint("Stopping the CPU. Bye!\n");
@@ -34,7 +69,9 @@ void manage_input(char *input){
 
     zprint("You said: ");
     zprint(input);
-    zprint("\n> ");
+    zprint("\n");
+    zprint_new_line(get_alias());
+    zprint_new_line("> ");
 }
 
 
@@ -98,3 +135,5 @@ void user_input(char *input) {
 
     manage_input(input);    
 }
+
+

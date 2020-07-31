@@ -148,7 +148,7 @@ static void keyboard_callback(cpu_state *state) {
         }
         if (ctrl_press == 1 && (letter == 'l' || letter == 'L'))
         {
-            clear_screen();
+            clear_screen(get_alias());
             flush_buffer(key_buffer);
             buff_pointer =0;
             max_back=0;

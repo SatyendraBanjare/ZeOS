@@ -20,10 +20,14 @@ void init_descriptor_tables(){
 	irq_install();
 }
 
+
+
 void kernel_main(void) {
 
 	//initialize isr &irq to help input the 
 	init_descriptor_tables();
+
+	init_shell();
 
 	// User Acces Stuff
 	// while(shell_access_flag == 0){

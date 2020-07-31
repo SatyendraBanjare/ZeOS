@@ -17,7 +17,7 @@ int get_offset_col(int offset);
  * Print a message on the specified location
  * If col, row, are negative, we will use the current offset
  */
-void zprint_at(char *message, int col, int row) {
+void zprint_at(char *message, int col, int row, int color) {
     /* Set cursor if col/row are negative */
     int offset;
     if (col >= 0 && row >= 0)
@@ -31,7 +31,7 @@ void zprint_at(char *message, int col, int row) {
     /* Loop through message and print it */
     int i = 0;
     while (message[i] != 0) {
-        offset = print_char(message[i++], col, row, CMD_COLOR);
+        offset = print_char(message[i++], col, row, color);
         /* Compute row/col for next iteration */
         row = get_offset_row(offset);
         col = get_offset_col(offset);
@@ -39,7 +39,11 @@ void zprint_at(char *message, int col, int row) {
 }
 
 void zprint(char *message) {
-    zprint_at(message, -1, -1);
+    zprint_at(message, -1, -1, CMD_COLOR);
+}
+
+void zprint_new_line(char *message){
+    zprint_at(message, -1, -1, CURSOR_COLOR);
 }
 
 void zprint_backspace() {
@@ -73,23 +77,31 @@ void zprint_right() {
  * Sets the video cursor to the returned offset
  */
 
-void zprint_at_last(char *message) {
+void print_char_hf(char c, int col, int row, int color){
+    uint8_t *vidmem = (uint8_t*) VIDEO_ADDRESS;
+    int offset = get_offset(col,row);
+    vidmem[offset] = c;
+    vidmem[offset+1] = color;
+    offset+=2;
+}
+
+void zprint_footer(char *message) {
     int row = 25;
     int i = 0;
     int len = strlen(message);
     for(i=0;i<len;i++){
-        print_char_last(message[i], i, row);
+        print_char_hf(message[i], i, row, FOOTER_COLOR);
     }
 }
 
-int print_char_last(char c, int col, int row){
-    uint8_t *vidmem = (uint8_t*) VIDEO_ADDRESS;
-    int offset = get_offset(col,row);
-    vidmem[offset] = c;
-    vidmem[offset+1] = CMD_COLOR;
-    offset+=2;
+void zprint_header(char *message) {
+    int row = 0;
+    int i = 0;
+    int len = strlen(message);
+    for(i=0;i<len;i++){
+        print_char_hf(message[i], i, row, HEADER_COLOR);
+    }
 }
-
 
 int print_char(char c, int col, int row, char attr) {
     uint8_t *vidmem = (uint8_t*) VIDEO_ADDRESS;
@@ -158,7 +170,7 @@ void set_cursor_offset(int offset) {
     outb(REG_SCREEN_DATA, (uint8_t)(offset & 0xff));
 }
 
-void clear_screen() {
+void clear_screen(char *alias) {
     int screen_size = VGA_WIDTH * VGA_HEIGHT;
     int i;
     uint8_t *screen = (uint8_t*) VIDEO_ADDRESS;
@@ -168,6 +180,8 @@ void clear_screen() {
         screen[i*2+1] = CMD_COLOR;
     }
     set_cursor_offset(get_offset(0, 1));
+    zprint_new_line(alias);
+    zprint_new_line("> ");
 }
 
 void clear_screen_full() {
