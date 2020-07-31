@@ -1,101 +1,187 @@
 #include "../include/terminal/terminal.h"
 
-enum vga_color {
-    VGA_COLOR_BLACK = 0,
-    VGA_COLOR_BLUE = 1,
-    VGA_COLOR_GREEN = 2,
-    VGA_COLOR_CYAN = 3,
-    VGA_COLOR_RED = 4,
-    VGA_COLOR_MAGENTA = 5,
-    VGA_COLOR_BROWN = 6,
-    VGA_COLOR_LIGHT_GREY = 7,
-    VGA_COLOR_DARK_GREY = 8,
-    VGA_COLOR_LIGHT_BLUE = 9,
-    VGA_COLOR_LIGHT_GREEN = 10,
-    VGA_COLOR_LIGHT_CYAN = 11,
-    VGA_COLOR_LIGHT_RED = 12,
-    VGA_COLOR_LIGHT_MAGENTA = 13,
-    VGA_COLOR_LIGHT_BROWN = 14,
-    VGA_COLOR_WHITE = 15,
-};
 
+/* Declaration of private functions */
+int get_cursor_offset();
+void set_cursor_offset(int offset);
+int print_char(char c, int col, int row, char attr);
+int get_offset(int col, int row);
+int get_offset_row(int offset);
+int get_offset_col(int offset);
 
-static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) {
-    return fg | bg << 4;
-}
+/**********************************************************
+ * Public Kernel API functions                            *
+ **********************************************************/
 
-
-static inline uint16_t vga_entry(unsigned char uc, uint8_t color) {
-    return (uint16_t) uc | (uint16_t) color << 8;
-}
-
-
-size_t zstrlen(const char* str) {
-    size_t len = 0;
-    while (str[len] != 0) {
-        len++;
+/**
+ * Print a message on the specified location
+ * If col, row, are negative, we will use the current offset
+ */
+void zprint_at(char *message, int col, int row) {
+    /* Set cursor if col/row are negative */
+    int offset;
+    if (col >= 0 && row >= 0)
+        offset = get_offset(col, row);
+    else {
+        offset = get_cursor_offset();
+        row = get_offset_row(offset);
+        col = get_offset_col(offset);
     }
-    return len;
-}
 
-
-
-
-size_t terminal_row;
-size_t terminal_column;
-uint8_t terminal_color;
-uint16_t *terminal_buffer;
-
-
-void terminal_initialize(void) {
-    terminal_row = 0;
-    terminal_column = 0;
-    terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
-    terminal_buffer = (uint16_t*) 0xb8000;
-    for (size_t y=0; y < VGA_HEIGHT; y++) {
-        for (size_t x=0; x < VGA_WIDTH; x++) {
-            const size_t index = y * VGA_WIDTH + x;
-            terminal_buffer[index] = vga_entry(' ', terminal_color);
-        }
+    /* Loop through message and print it */
+    int i = 0;
+    while (message[i] != 0) {
+        offset = print_char(message[i++], col, row, CMD_COLOR);
+        /* Compute row/col for next iteration */
+        row = get_offset_row(offset);
+        col = get_offset_col(offset);
     }
 }
 
+void zprint(char *message) {
+    zprint_at(message, -1, -1);
+}
 
-void terminal_setcolor(uint8_t color) {
-    terminal_color = color;
+void zprint_backspace() {
+    int offset = get_cursor_offset()-2;
+    int row = get_offset_row(offset);
+    int col = get_offset_col(offset);
+    print_char(0x08, col, row, CMD_COLOR);
+}
+
+void zprint_left() {
+    int offset = get_cursor_offset()-2;
+    set_cursor_offset(offset);
+}
+
+void zprint_right() {
+    int offset = get_cursor_offset()+2;
+    set_cursor_offset(offset);
+}
+
+/**********************************************************
+ * Private kernel functions                               *
+ **********************************************************/
+
+
+/**
+ * Innermost print function for our kernel, directly accesses the video memory 
+ *
+ * If 'col' and 'row' are negative, we will print at current cursor location
+ * If 'attr' is zero it will use 'white on black' as default
+ * Returns the offset of the next character
+ * Sets the video cursor to the returned offset
+ */
+
+void zprint_at_last(char *message) {
+    int row = 25;
+    int i = 0;
+    int len = strlen(message);
+    for(i=0;i<len;i++){
+        print_char_last(message[i], i, row);
+    }
+}
+
+int print_char_last(char c, int col, int row){
+    uint8_t *vidmem = (uint8_t*) VIDEO_ADDRESS;
+    int offset = get_offset(col,row);
+    vidmem[offset] = c;
+    vidmem[offset+1] = CMD_COLOR;
+    offset+=2;
 }
 
 
-void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
-    const size_t index = y * VGA_WIDTH + x;
-    terminal_buffer[index] = vga_entry(c, color);
-}
+int print_char(char c, int col, int row, char attr) {
+    uint8_t *vidmem = (uint8_t*) VIDEO_ADDRESS;
+    if (!attr) attr = CMD_COLOR;
 
-void terminal_putchar(char c) {
+    /* Error control: print a red 'E' if the coords aren't right */
+    if (col >= VGA_WIDTH || row >= VGA_HEIGHT) {
+        vidmem[2*(VGA_WIDTH)*(VGA_HEIGHT)-2] = 'E';
+        vidmem[2*(VGA_WIDTH)*(VGA_HEIGHT)-1] = 0xf4;
+        return get_offset(col, row);
+    }
+
+    int offset;
+    if (col >= 0 && row >= 0) offset = get_offset(col, row);
+    else offset = get_cursor_offset();
+
     if (c == '\n') {
-        terminal_column = 0;
-        if (++terminal_row >= VGA_HEIGHT) {
-            terminal_row = 0;
-        }
+        row = get_offset_row(offset);
+        offset = get_offset(0, row+1);
+    } else if (c == 0x08) { /* Backspace */
+        vidmem[offset] = ' ';
+        vidmem[offset+1] = attr;
     } else {
-        terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
-        if (++terminal_column >= VGA_WIDTH) {
-            terminal_column = 0;
-            if (++terminal_row >= VGA_HEIGHT) {
-                terminal_row = 0;
-            }
-        }
+        vidmem[offset] = c;
+        vidmem[offset+1] = attr;
+        offset += 2;
     }
-}
 
+    /* Check if the offset is over screen size and scroll */
+    if (offset >= VGA_HEIGHT * VGA_WIDTH * 2) {
+        int i;
+        for (i = 0; i < VGA_HEIGHT; i++) 
+            memory_copy((uint8_t*)(get_offset(0, i+2) + VIDEO_ADDRESS),
+                        (uint8_t*)(get_offset(0, i+1) + VIDEO_ADDRESS),
+                        VGA_WIDTH * 2);
 
-void terminal_write(const char* data, size_t size) {
-    for (size_t ii=0; ii < size; ii++) {
-        terminal_putchar(data[ii]);
+        /* Blank last line */
+        char *last_line = (char*) (get_offset(0, VGA_HEIGHT-1) + (uint8_t*) VIDEO_ADDRESS);
+        for (i = 0; i < VGA_WIDTH * 2; i++) last_line[i] = 0;
+
+        offset -= 2 * VGA_WIDTH;
     }
+
+    set_cursor_offset(offset);
+    return offset;
 }
 
-
-void terminal_writestring(const char* data) {
-    terminal_write(data, zstrlen(data));
+int get_cursor_offset() {
+    /* Use the VGA ports to get the current cursor position
+     * 1. Ask for high byte of the cursor offset (data 14)
+     * 2. Ask for low byte (data 15)
+     */
+    outb(REG_SCREEN_CTRL, 14);
+    int offset = inb(REG_SCREEN_DATA) << 8; /* High byte: << 8 */
+    outb(REG_SCREEN_CTRL, 15);
+    offset += inb(REG_SCREEN_DATA);
+    return offset * 2; /* Position * size of character cell */
 }
+
+void set_cursor_offset(int offset) {
+    /* Similar to get_cursor_offset, but instead of reading we write data */
+    offset /= 2;
+    outb(REG_SCREEN_CTRL, 14);
+    outb(REG_SCREEN_DATA, (uint8_t)(offset >> 8));
+    outb(REG_SCREEN_CTRL, 15);
+    outb(REG_SCREEN_DATA, (uint8_t)(offset & 0xff));
+}
+
+void clear_screen() {
+    int screen_size = VGA_WIDTH * VGA_HEIGHT;
+    int i;
+    uint8_t *screen = (uint8_t*) VIDEO_ADDRESS;
+
+    for (i = VGA_WIDTH; i < screen_size; i++) {
+        screen[i*2] = ' ';
+        screen[i*2+1] = CMD_COLOR;
+    }
+    set_cursor_offset(get_offset(0, 1));
+}
+
+void clear_screen_full() {
+    int screen_size = VGA_WIDTH * VGA_HEIGHT;
+    int i;
+    uint8_t *screen = (uint8_t*) VIDEO_ADDRESS;
+
+    for (i = 0; i < screen_size; i++) {
+        screen[i*2] = ' ';
+        screen[i*2+1] = CMD_COLOR;
+    }
+    set_cursor_offset(get_offset(0, 0));
+}
+
+int get_offset(int col, int row) { return 2 * (row * VGA_WIDTH + col); }
+int get_offset_row(int offset) { return offset / (2 * VGA_WIDTH); }
+int get_offset_col(int offset) { return (offset - (get_offset_row(offset)*2*VGA_WIDTH))/2; }
