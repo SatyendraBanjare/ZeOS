@@ -21,3 +21,13 @@ void init_timer(uint32_t freq) {
     outb(0x40, low);
     outb(0x40, high);
 }
+
+// Read Time Stamp function
+uint32_t rdtsc(void)
+{   uint32_t time_h, time_l;
+    // uint32_t eax, edx;
+    asm volatile("rdtsc\n\t": "=a" (time_l), "=d" (time_h));
+
+    return time_h;
+
+}

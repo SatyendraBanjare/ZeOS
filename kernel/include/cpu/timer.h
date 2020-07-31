@@ -8,5 +8,6 @@
 #include "state.h"
 
 void init_timer(uint32_t freq);
+uint32_t rdtsc(void);
 
 #endif
