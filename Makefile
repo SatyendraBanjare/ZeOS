@@ -35,6 +35,7 @@ zeos.iso: check-multiboot
 	rm -rf isodir/
 	mkdir -p isodir/boot/grub
 	cp zeos.bin isodir/boot/zeos.bin
+# 	cp conf/initrd.img isodir/boot/initrd.img
 	cp conf/grub.cfg isodir/boot/grub/grub.cfg
 	grub-mkrescue -o zeos.iso isodir
 
