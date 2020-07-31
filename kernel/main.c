@@ -20,13 +20,6 @@ void init_descriptor_tables(){
 	irq_install();
 }
 
-void start_execution(){
-	zprint("HI");
-
-	 asm("int $2");
-    asm("int $3");
-}
-
 void kernel_main(void) {
 
 	//initialize isr &irq to help input the 
@@ -41,7 +34,7 @@ void kernel_main(void) {
 	// 	}
 	// }
 
-	start_execution();
+	// start_execution();
 
 
 }
