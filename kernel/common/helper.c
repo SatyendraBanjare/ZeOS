@@ -86,3 +86,10 @@ char * int_to_str(int input){
     reverse(buffer);
     return buffer;
 }
+
+void memory_copy(uint8_t *source, uint8_t *dest, int nbytes) {
+    int i;
+    for (i = 0; i < nbytes; i++) {
+        *(dest + i) = *(source + i);
+    }
+}
