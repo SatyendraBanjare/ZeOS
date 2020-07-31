@@ -8,6 +8,7 @@
 #include "../cpu/util.h"
 #include "../common/helper.h"
 #include "../terminal/terminal.h"
+#include "../shell/shell.h"
 
 #include "../codes.h"
 

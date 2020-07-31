@@ -142,5 +142,5 @@ void register_interrupt_handler(uint8_t n, state_t handler) {
 void irq_install(){
 	asm volatile("sti");
 	init_timer(50);
-    // init_keyboard();
+    init_keyboard();
 }
