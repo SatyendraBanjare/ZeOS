@@ -11,12 +11,12 @@ Operating system Hobby Project
 - [x] GDT setup
 - [x] IDT & ISR setup
 - [ ] Terminal 
-  + [ ] Terminal Scrolling
-  + [ ] Clear Screen Command (implement shortcut if possible)
+  + [x] Terminal Scrolling
+  + [x] Clear Screen Command (shortcut : ctrl + L)
   + [ ] Implement delete function for deleting backways
   + [ ] Implement C-A and C-E (endofline)
-  + [ ] Implement <- | -> arrows !
-- [ ] basic keyboard input
+  + [x] Implement arrows. < > done. ^ up arrow prints last command.
+- [x] basic keyboard input
 - [ ] Heap
 - [ ] InitRD
 - [ ] VFS
