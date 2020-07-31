@@ -73,3 +73,16 @@ int strcmp(char s1[], char s2[]) {
     }
     return s1[i] - s2[i];
 }
+
+char * int_to_str(int input){
+    char *buffer = "";
+    int ll = int_len( input);
+    for (int i = 0; i < ll; i++)
+    {
+        int temp = input % 10;
+        buffer[i] = (char)(temp + 0x30);
+        input /= 10;
+    }
+    reverse(buffer);
+    return buffer;
+}
