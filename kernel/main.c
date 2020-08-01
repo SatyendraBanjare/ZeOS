@@ -31,6 +31,7 @@ void kernel_main(struct multiboot_info *mboot_ptr) {
 	{
 		zprint("JJJJ");
 	}
+
 	uint32_t initrd_location = *((uint32_t*)mboot_ptr->mods_addr);
 
 	zprint(int_to_str(initrd_location));
