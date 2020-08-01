@@ -1,7 +1,7 @@
 CC = ~/build-i686-elf/linux/output/bin/i686-elf-gcc
 AS= nasm
 
-CFLAGS = -I/kernel/include/ -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+CFLAGS = -I/kernel/include/ -std=gnu99 -ffreestanding -O2 -Wall -Wextra -m32 -march=i386  -fPIC -fno-pie -fno-exceptions
 
 C_DIRS = kernel \
 		 kernel/common \
@@ -39,11 +39,11 @@ zeos.iso: check-multiboot
 	cp conf/grub.cfg isodir/boot/grub/grub.cfg
 	grub-mkrescue -o zeos.iso isodir
 
-run:
+run: zeos.iso
 	qemu-system-i386 -cdrom zeos.iso
 
 debug:
-	qemu-system-i386 -s -cdrom zeos.iso -d guest_errors,int &
+	qemu-system-i386 -cdrom zeos.iso -d guest_errors,int &
 	${GDB} -ex "target remote localhost:1234"
 
 clean:
