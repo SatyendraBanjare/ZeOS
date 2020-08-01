@@ -14,4 +14,10 @@ int strcmp(char s1[], char s2[]);
 char * int_to_str(int input);
 // void memory_copy(uint8_t *source, uint8_t *dest, int nbytes);
 
+void memset(uint8_t *dest, uint8_t val, uint32_t len);
+
+void memcpy(uint8_t *dest, const uint8_t *src, uint32_t len);
+
+char *strcpy(char *dest, const char *src);
+
 #endif
