@@ -100,8 +100,8 @@ void print_char_hf(char c, int col, int row, int color){
 //     return c;
 // }
 
-void zprint_footer(char *message) {
-    int row = 25;
+void zprint_header(char *message) {
+    int row = 0;
     int i = 0;
     int len = strlen(message);
     for(i=0;i<len;i++){
@@ -110,7 +110,7 @@ void zprint_footer(char *message) {
 }
 
 void zprint_time(char *message) {
-    int row = 25;
+    int row = 0;
     int col = 67;
     int len = 11;
 
@@ -122,8 +122,8 @@ void zprint_time(char *message) {
     print_char_hf(' ', 79, row, FOOTER_COLOR);
 }
 
-void zprint_header(char *message) {
-    int row = 0;
+void zprint_footer(char *message) {
+    int row = 25;
     int i = 0;
     int len = strlen(message);
     for(i=0;i<len;i++){

@@ -27,7 +27,6 @@ static void printuptime(int input)
 }
 
 
-
 static void timer_callback(cpu_state *state) {
     printuptime(rdtsc());
     tick++;

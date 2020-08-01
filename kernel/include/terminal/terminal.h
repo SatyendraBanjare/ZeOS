@@ -36,6 +36,7 @@ void zprint_footer(char *message);
 void zprint_header(char *message);
 void zprint_new_line(char *message);
 void zprint_time(char *message);
+
 // void terminal_initialize(void);
 // void terminal_writestring(const char* data);
 
