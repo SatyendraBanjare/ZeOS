@@ -11,23 +11,27 @@ footer : current work directory , arg counts
 
 char * alias = "Zeus";
 int uptime;
-char * dir = "/DEV/"
+char curr_dir_name[33] ;
+
 
 char * get_alias(){
 	return alias;
 }
 
-int get_uptime(){
+char * get_curr_dir_name(){
+	return curr_dir_name;
+}
 
+int get_uptime(){
+	return uptime;
 }
 
 void print_header(){
 	zprint_header("                               WELCOME TO ZEOS !!                               ");
 }
 
-
 void print_footer(){
-	zprint_footer("CURRENT DIRECTORY : /DEV/");
+	zprint_footer("CURRENT DIRECTORY : /DEV/                             |  Up Time: ");
 }
 
 void print_blank(){zprint("\n  \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \
@@ -36,12 +40,15 @@ void print_blank(){zprint("\n  \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \
 }
 
 void init_shell(){
-    // irq_install();
+    
+    uptime = rdtsc();
+    
     clear_screen_full();
     print_header();
     print_footer();
     print_blank();
     clear_screen(get_alias());
+
 }
 
 void manage_input(char *input){
@@ -52,7 +59,10 @@ void manage_input(char *input){
         clear_screen();
     } else if (strcmp (input, "HELP") == 0){
         zprint(input);
-    } else if (strcmp (input, "delay") == 0){
+    } else if (strcmp (input, "alias") == 0){
+        alias = "dedd";
+    } 
+    else if (strcmp (input, "delay") == 0){
     
     uint32_t time_old = rdtsc() +5;
     uint32_t tn = rdtsc();
@@ -69,7 +79,8 @@ void manage_input(char *input){
 
     zprint("You said: ");
     zprint(input);
-    zprint("\n");
+    
+    zprint("\n");	
     zprint_new_line(get_alias());
     zprint_new_line("> ");
 }
@@ -115,6 +126,7 @@ int getWords(char *base, char target[20][20])
 
 void user_input(char *input) {
 
+	
     int n; //number of words
     int i; //loop counter 
     // char str[]="This is Mike";
@@ -133,7 +145,11 @@ void user_input(char *input) {
         
     }
 
-    manage_input(input);    
+    
+
+    manage_input(input);  
+
+    // zprint_footer_timer();  
 }
 
 

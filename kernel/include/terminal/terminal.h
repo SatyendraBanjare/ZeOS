@@ -8,6 +8,7 @@
 #include "../cpu/util.h"
 #include "../common/helper.h"
 #include "../cpu/isr.h"
+#include "../shell/shell.h"
 
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 24
@@ -34,7 +35,7 @@ void clear_screen_full();
 void zprint_footer(char *message);
 void zprint_header(char *message);
 void zprint_new_line(char *message);
-
+void zprint_time(char *message);
 // void terminal_initialize(void);
 // void terminal_writestring(const char* data);
 

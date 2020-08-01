@@ -181,6 +181,7 @@ static void keyboard_callback(cpu_state *state) {
     }
 
 
+    (void)(state);
 
     // void *(state);
 }

@@ -1,9 +1,35 @@
 #include "../include/cpu/timer.h"
 #include "../include/cpu/isr.h"
+#include "../include/terminal/terminal.h"
 
 uint32_t tick = 0;
 
+// Read Time Stamp function
+uint32_t rdtsc()
+{   uint32_t time_h, time_l;
+    // uint32_t eax, edx;
+    asm volatile("rdtsc\n\t": "=a" (time_l), "=d" (time_h));
+
+    return time_h;
+
+}
+
+static void printuptime(int input)
+{
+    char buffer[11] = "0000000000";
+    for (int i = 0; i < 10; i++)
+    {
+        int temp = input % 10;
+        buffer[10 - i] = (char)(temp + 0x30);
+        input /= 10;
+    }
+    zprint_time(buffer);
+}
+
+
+
 static void timer_callback(cpu_state *state) {
+    printuptime(rdtsc());
     tick++;
     (void)(state);
 }
@@ -22,12 +48,4 @@ void init_timer(uint32_t freq) {
     outb(0x40, high);
 }
 
-// Read Time Stamp function
-uint32_t rdtsc(void)
-{   uint32_t time_h, time_l;
-    // uint32_t eax, edx;
-    asm volatile("rdtsc\n\t": "=a" (time_l), "=d" (time_h));
 
-    return time_h;
-
-}

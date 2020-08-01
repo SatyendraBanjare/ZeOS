@@ -1,5 +1,11 @@
 #include "../include/terminal/terminal.h"
 
+void memory_copy(uint8_t *source, uint8_t *dest, int nbytes) {
+    int i;
+    for (i = 0; i < nbytes; i++) {
+        *(dest + i) = *(source + i);
+    }
+}
 
 /* Declaration of private functions */
 int get_cursor_offset();
@@ -82,8 +88,17 @@ void print_char_hf(char c, int col, int row, int color){
     int offset = get_offset(col,row);
     vidmem[offset] = c;
     vidmem[offset+1] = color;
-    offset+=2;
+    // offset+=2;
 }
+
+// char print_tick(char c){
+//     uint8_t *vidmem = (uint8_t*) VIDEO_ADDRESS;
+//     int offset = get_offset(54,25);
+//     vidmem[offset] = c;
+//     vidmem[offset+1] = FOOTER_COLOR;
+    
+//     return c;
+// }
 
 void zprint_footer(char *message) {
     int row = 25;
@@ -92,6 +107,19 @@ void zprint_footer(char *message) {
     for(i=0;i<len;i++){
         print_char_hf(message[i], i, row, FOOTER_COLOR);
     }
+}
+
+void zprint_time(char *message) {
+    int row = 25;
+    int col = 67;
+    int len = 11;
+
+    print_char_hf(' ', 66, row, FOOTER_COLOR);
+    for(int i=0;i<len;i++){
+        print_char_hf(message[i], col+ i, row, FOOTER_COLOR);
+    }
+    print_char_hf('s', 78, row, FOOTER_COLOR);
+    print_char_hf(' ', 79, row, FOOTER_COLOR);
 }
 
 void zprint_header(char *message) {
