@@ -27,9 +27,10 @@ void kernel_main(struct multiboot_info *mboot_ptr) {
 	init_descriptor_tables();
 
 	init_shell();
-	if (mboot_ptr->mods_count == 0)
+
+	if (mboot_ptr && (mboot_ptr->flags & MULTIBOOT_INFO_MODS) && (mboot_ptr->mods_count > 0))
 	{
-		zprint("JJJJ");
+		zprint("Got Module count > 0 ");
 	}
 
 	uint32_t initrd_location = *((uint32_t*)mboot_ptr->mods_addr);
