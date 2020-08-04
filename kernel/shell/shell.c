@@ -27,11 +27,44 @@ int get_uptime(){
 }
 
 void print_header(){
-	zprint_footer("                               WELCOME TO ZEOS !!                               ");
+	zprint_footer("                               ZEOS Operating System !!                               ");
 }
 
 void print_footer(){
 	zprint_header("CURRENT DIRECTORY : /DEV/                             |  Up Time:  ");
+}
+
+void print_welcome_message(){
+    zprint(
+
+    "                               WELCOME TO ZEOS !!                               "
+    "                                                                                "
+    "                                                                                "
+    "                                                                                "
+    "                                                                                "                                                 
+    "                                                                                " 
+    "          ****           *      ***** **          * ***          *******        "
+    "         *  *************    ******  **** *     *  ****        *       ***      " 
+    "        *     **********    **   *  * ****     *  *  ***      *         **      "
+    "        *             *    *    *  *   **     *  **   ***     **        *       "
+    "         **          *         *  *          *  ***    ***     ***              "
+    "                    *         ** **         **   **     **    ** ***            "
+    "                   *          ** **         **   **     **     *** ***          "
+    "                  *           ** ******     **   **     **       *** ***        "
+    "                 *            ** *****      **   **     **         *** ***      "
+    "                *             ** **         **   **     **           ** ***     "
+    "               *              *  **          **  **     **            ** **     "
+    "              *                  *            ** *      *              * *      "
+    "          ****           *   ****         *    ***     *     ***        *       "
+    "         *  *************   *  ***********      *******     *  *********        "
+    "        *     **********   *     ******           ***      *     *****          "
+    "                           *                               *                    "
+    "                            **                              **                  "
+    "                                                                                "
+    "                                                                                "
+    "                                                                                "
+    "                                                                                "
+    );
 }
 
 void print_blank(){zprint("\n  \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \
@@ -39,10 +72,23 @@ void print_blank(){zprint("\n  \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \
  \n \n \n \n \n \n \n \n \n \n ");
 }
 
+void delay5(){
+    uint32_t time_old = rdtsc() +5;
+    uint32_t tn = rdtsc();
+    while((tn - time_old) != 0)
+    {
+        tn = rdtsc();
+        // zprint("HI \n");
+    }
+}
+
 void init_shell(){
     
     uptime = rdtsc();
     
+    clear_screen_full();
+    print_welcome_message();
+    delay5();
     clear_screen_full();
     print_header();
     print_footer();
