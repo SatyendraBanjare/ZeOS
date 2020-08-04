@@ -33,6 +33,9 @@ check-multiboot: zeos.bin
 
 zeos.iso: check-multiboot
 	rm -rf isodir/
+	rm -rf log/
+	mkdir log
+	touch log/log.txt
 	mkdir -p isodir/boot/grub
 	mkdir -p isodir/module
 	cp zeos.bin isodir/boot/zeos.bin
@@ -42,7 +45,7 @@ zeos.iso: check-multiboot
 	grub-mkrescue -o zeos.iso isodir
 
 run: zeos.iso
-	qemu-system-i386 -cdrom zeos.iso
+	qemu-system-i386 -cdrom zeos.iso -serial file:log/log.txt
 
 debug:
 	qemu-system-i386 -cdrom zeos.iso -d guest_errors,int &
@@ -55,3 +58,4 @@ clean:
 	rm -rf $(shell find $(C_DIRS) -type f -name "*.o" )
 	rm -rf *.bin
 	rm -rf	*.iso
+	rm -rf log/

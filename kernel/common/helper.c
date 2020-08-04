@@ -1,6 +1,6 @@
 #include "../include/common/helper.h"
 
-
+#define SERIAL_OUTPUT 0x3F8
 
 // Some helper functions
 void int_to_ascii(int n, char str[]) {
@@ -95,4 +95,16 @@ char * int_to_str(int input){
     }
     reverse(buffer);
     return buffer;
+}
+
+static void write_log_char(char c){
+    outb(SERIAL_OUTPUT,c);
+}
+
+void print_log(char *message){
+    int i =0;
+    while (message[i] != 0) {
+        write_log_char(message[i]);
+        i++;
+    }
 }

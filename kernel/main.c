@@ -9,6 +9,7 @@
 #error "You are not using a cross-compiler, you will most certainly run into trouble"
 #endif
 
+
 //check flag for if username & password are correct
 int shell_access_flag = 0;
 
@@ -24,8 +25,12 @@ void init_descriptor_tables(){
 void kernel_main(struct multiboot_info *mboot_ptr) {
 
 	//initialize isr &irq to help input the 
+	// working outputting to serial output . outb(0x3F8,'A');
+
+	print_log("Initializing Descriptor Tables \n \n");
 	init_descriptor_tables();
 
+	print_log("Initializing Shell \n \n");
 	init_shell();
 
 	if (mboot_ptr && (mboot_ptr->flags & MULTIBOOT_INFO_MODS) && (mboot_ptr->mods_count > 0))
