@@ -1,0 +1,2 @@
+kernel /boot/zeos.bin 
+module /module/initrd.img
