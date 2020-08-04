@@ -20,6 +20,8 @@ stack_top:
 section .text
 global _start:function (_start.end - _start)
 _start:
+    push    ebx ; Push info to multiboot header, sets flags
+    
 	mov esp, stack_top
 
 	extern load_kernel

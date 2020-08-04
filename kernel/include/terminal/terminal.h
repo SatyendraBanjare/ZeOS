@@ -22,7 +22,7 @@
 #define CMD_COLOR       0x0f
 #define CURSOR_COLOR    0x0a
 #define HEADER_COLOR    0x4e
-#define FOOTER_COLOR    0x10
+#define FOOTER_COLOR    0x1f
 
 /* Public kernel API */
 void clear_screen();
@@ -36,6 +36,7 @@ void zprint_footer(char *message);
 void zprint_header(char *message);
 void zprint_new_line(char *message);
 void zprint_time(char *message);
+
 // void terminal_initialize(void);
 // void terminal_writestring(const char* data);
 

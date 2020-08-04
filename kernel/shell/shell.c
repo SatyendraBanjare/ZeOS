@@ -27,11 +27,11 @@ int get_uptime(){
 }
 
 void print_header(){
-	zprint_header("                               WELCOME TO ZEOS !!                               ");
+	zprint_footer("                               WELCOME TO ZEOS !!                               ");
 }
 
 void print_footer(){
-	zprint_footer("CURRENT DIRECTORY : /DEV/                             |  Up Time: ");
+	zprint_header("CURRENT DIRECTORY : /DEV/                             |  Up Time:  ");
 }
 
 void print_blank(){zprint("\n  \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \
