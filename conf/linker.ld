@@ -2,30 +2,36 @@ ENTRY(_start)
 
 SECTIONS
 {
+    . = 0xc0100000;  
 
-	.text 0x100000 :
-    {
-        code = .;
+    virtual_mem = 0xc0000000;
+
+    kernel_virtual_start = . ;
+    
+    . -= virtual_mem;
+
+    kernel_physical_start = . ;
+
+    .text ALIGN(0x1000) : 
+    {   code = .;
         *(.multiboot)
         *(.text)
-        . = ALIGN(4096);
     }
 
-    .data :
+    .data ALIGN(0x1000) : 
     {
-        data = .;
         *(.data)
         *(.rodata)
-        . = ALIGN(4096);
     }
 
-    .bss :
-    {
-        bss = .;
+    .bss ALIGN(0x1000) :     {
         *(.bss)
-        . = ALIGN(4096);
     }
 
-    end = .;
+    kernel_physical_end = . ;
+
+    . += virtual_mem ;
+
+    kernel_virtual_end = . ;
 
 }
