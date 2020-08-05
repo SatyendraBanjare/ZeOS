@@ -87,9 +87,9 @@ void init_shell(){
     uptime = rdtsc();
     
     clear_screen_full();
-    print_welcome_message();
-    delay5();
-    clear_screen_full();
+    // print_welcome_message();
+    // delay5();
+    // clear_screen_full();
     print_header();
     print_footer();
     print_blank();

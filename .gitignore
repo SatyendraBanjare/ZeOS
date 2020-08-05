@@ -4,3 +4,4 @@ isodir/
 *.iso
 *.swp
 log/
+stage2_eltorito
