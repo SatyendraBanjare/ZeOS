@@ -12,5 +12,16 @@ typedef struct {
    uint32_t eip, cs, eflags, esp, ss; /* Pushed by the processor automatically */
 } cpu_state;
 
+struct kernel_memory_descriptor_t {
+  uint32_t kernel_virtual_start;
+  uint32_t kernel_virtual_end;
+  uint32_t kernel_physical_start;
+  uint32_t kernel_physical_end;
+};
+
+uint32_t KERNEL_VIRTUAL_BASE;
+
+void * PageDirectoryVirtualAddress;
+void * PageDirectoryPhysicalAddress;
 
 #endif

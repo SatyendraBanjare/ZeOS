@@ -48,13 +48,71 @@ void print_multiboot_info(struct multiboot_info *mboot_ptr){
   // fprintf(stream, "mods_count: %i\n", mboot_ptr->mods_count); //base 10
   // fprintf(stream, "mods_addr (virtual): %x\n", mboot_ptr->mods_addr);
 	
-	zprint("flags : 0x");zprint(flags);zprint("\n");
-	zprint("mem_lower (KB) : ");zprint(mem_lower);zprint("\n");
-	zprint("mem_upper (KB) : ");zprint(mem_upper);zprint("\n");
-	zprint("boot_device : 0x");zprint(boot_device);zprint("\n");
-	zprint("cmdline : 0x");zprint(cmdline);zprint("\n");
-	zprint("mods_count : ");zprint(mods_count);zprint("\n");
-	zprint("mods_addr : 0x");zprint(mods_addr);zprint("\n");
+	print_log("flags : 0x");print_log(flags);print_log("\n");
+	print_log("mem_lower (KB) : ");print_log(mem_lower);print_log("\n");
+	print_log("mem_upper (KB) : ");print_log(mem_upper);print_log("\n");
+	print_log("boot_device : 0x");print_log(boot_device);print_log("\n");
+	print_log("cmdline : 0x");print_log(cmdline);print_log("\n");
+	print_log("mods_count : ");print_log(mods_count);print_log("\n");
+	print_log("mods_addr : 0x");print_log(mods_addr);print_log("\n");
 
-	zprint("\n \n \n");
+	print_log("\n \n \n");
+
+	
+	if (mboot_ptr && (mboot_ptr->flags & MULTIBOOT_INFO_MEMORY) )
+	{
+		print_log("Got memory  ");print_log("\n");
+	}
+	if (mboot_ptr && (mboot_ptr->flags & MULTIBOOT_INFO_BOOTDEV) )
+	{
+		print_log("Got bootdev  ");print_log("\n");
+	}
+	if (mboot_ptr && (mboot_ptr->flags & MULTIBOOT_INFO_CMDLINE) )
+	{
+		print_log("Got cmdline  ");print_log("\n");
+	}
+	if (mboot_ptr && (mboot_ptr->flags & MULTIBOOT_INFO_MODS) )
+	{
+		print_log("Got MULTIBOOT_INFO_MODS  ");print_log("\n");
+	}
+	if (mboot_ptr && (mboot_ptr->flags & MULTIBOOT_INFO_AOUT_SYMS) )
+	{
+		print_log("Got MULTIBOOT_INFO_AOUT_SYMS  ");print_log("\n");
+	}
+	if (mboot_ptr && (mboot_ptr->flags & MULTIBOOT_INFO_ELF_SHDR) )
+	{
+		print_log("Got MULTIBOOT_INFO_ELF_SHDR  ");print_log("\n");
+	}
+
+	if (mboot_ptr && (mboot_ptr->flags & MULTIBOOT_INFO_MEM_MAP) )
+	{
+		print_log("Got MULTIBOOT_INFO_MEM_MAP  ");print_log("\n");
+	}
+	if (mboot_ptr && (mboot_ptr->flags & MULTIBOOT_INFO_DRIVE_INFO) )
+	{
+		print_log("Got MULTIBOOT_INFO_DRIVE_INFO  ");print_log("\n");
+	}
+	if (mboot_ptr && (mboot_ptr->flags & MULTIBOOT_INFO_CONFIG_TABLE) )
+	{
+		print_log("Got MULTIBOOT_INFO_CONFIG_TABLE  ");print_log("\n");
+	}
+	if (mboot_ptr && (mboot_ptr->flags & MULTIBOOT_INFO_BOOT_LOADER_NAME) )
+	{
+		print_log("Got MULTIBOOT_INFO_BOOT_LOADER_NAME  ");print_log("\n");
+	}
+	if (mboot_ptr && (mboot_ptr->flags & MULTIBOOT_INFO_APM_TABLE) )
+	{
+		print_log("Got MULTIBOOT_INFO_APM_TABLE  ");print_log("\n");
+	}
+	if (mboot_ptr && (mboot_ptr->flags & MULTIBOOT_INFO_VBE_INFO) )
+	{
+		print_log("Got MULTIBOOT_INFO_VBE_INFO  ");print_log("\n");
+	}
+	if (mboot_ptr && (mboot_ptr->flags & MULTIBOOT_INFO_FRAMEBUFFER_INFO) )
+	{
+		print_log("Got MULTIBOOT_INFO_FRAMEBUFFER_INFO  ");print_log("\n");
+	}
+
+
+	if (mboot_ptr->mods_count > 0){print_log(" MMMM module count >0");}
 }
