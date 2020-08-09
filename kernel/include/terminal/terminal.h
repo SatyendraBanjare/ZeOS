@@ -13,7 +13,7 @@
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 24
 
-#define VIDEO_ADDRESS 0xb8000
+#define VIDEO_ADDRESS 0xC00B8000
 
 /* Screen i/o ports */
 #define REG_SCREEN_CTRL 0x3d4

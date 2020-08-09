@@ -23,7 +23,7 @@ all: zeos.iso
 
 # compile the boot and loader assembly files.
 %.o: %.asm
-	${AS} -i/boot/include -felf32 $< -o $@
+	${AS} -felf32 $< -o $@
 
 zeos.bin: ${OBJ}
 	${CC} -T conf/linker.ld -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc
