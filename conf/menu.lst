@@ -1,2 +1,6 @@
+default =0
+timeout = 5
+
+title zeos
 kernel /boot/zeos.bin 
 module /module/initrd.img

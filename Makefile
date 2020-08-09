@@ -14,7 +14,7 @@ C_DIRS = kernel \
 C_SOURCES = $(shell find $(C_DIRS) -type f -name "*.c" )
 ASM_SOURCES = $(wildcard boot/*.asm )
 
-OBJ = ${C_SOURCES:.c=.o} ${ASM_SOURCES:.asm=.o}
+OBJ = ${ASM_SOURCES:.asm=.o} ${C_SOURCES:.c=.o} 
 
 all: zeos.iso
 
@@ -26,12 +26,12 @@ all: zeos.iso
 	${AS} -i/boot/include -felf32 $< -o $@
 
 zeos.bin: ${OBJ}
-	${CC} -T conf/linker.ld -Ttext 0x1000 -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc
+	${CC} -T conf/linker.ld -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc
 
-check-multiboot: zeos.bin
-	grub-file --is-x86-multiboot zeos.bin
+# check-multiboot: zeos.bin
+# 	grub-file --is-x86-multiboot zeos.bin
 
-zeos.iso: check-multiboot
+zeos.iso: zeos.bin
 	rm -rf isodir/
 	rm -rf log/
 	mkdir log
@@ -40,9 +40,20 @@ zeos.iso: check-multiboot
 	mkdir -p isodir/module
 	cp zeos.bin isodir/boot/zeos.bin
 	cp initrd.img isodir/module/initrd.img
+	cp stage2_eltorito isodir/boot/grub/ 
 	cp conf/menu.lst isodir/boot/grub/menu.lst
-	cp conf/grub.cfg isodir/boot/grub/grub.cfg
-	grub-mkrescue -o zeos.iso isodir
+	mkisofs -R                              \
+          -b boot/grub/stage2_eltorito    \
+          -no-emul-boot                   \
+          -boot-load-size 4               \
+          -A os                           \
+          -input-charset utf8             \
+          -quiet                          \
+          -boot-info-table                \
+          -o zeos.iso                     \
+          isodir
+# 	cp conf/grub.cfg isodir/boot/grub/grub.cfg
+#     grub-mkrescue -o zeos.iso isodir
 
 run: zeos.iso
 	qemu-system-i386 -cdrom zeos.iso -serial file:log/log.txt
