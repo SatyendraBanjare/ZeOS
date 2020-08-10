@@ -2,7 +2,7 @@
 
 #include "../../include/cpu/memory/paging.h"
 #include "../../include/multiboot/multiboot.h"
-// #include "../multiboot_utils.h"
+#include "../../include/multiboot/multiboot_util.h"
 
 #define PAGE_DIRECTORY_OFFSET_BITS 10
 #define PAGE_TABLE_OFFSET_BITS 10
@@ -17,11 +17,6 @@
 // Enough room for 512 MB of RAM
 // TODO: Find a more efficient way to initialize page allocator
 #define BITMAP_SIZE 4096
-
-uint32_t p_to_v(uint32_t physical_address) {
-  return physical_address + (uint32_t) &KERNEL_VIRTUAL_BASE;
-}
-
 
 uint32_t free_pages;
 uint32_t free_page_bitmap[BITMAP_SIZE];

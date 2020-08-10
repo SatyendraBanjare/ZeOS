@@ -12,30 +12,28 @@
 #error "You are not using a cross-compiler, you will most certainly run into trouble"
 #endif
 
+extern void enable_paging();
 
-//check flag for if username & password are correct
-int shell_access_flag = 0;
+void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multiboot_info_t *mboot_ptr) {
 
-void init_descriptor_tables(){
-	//initialize GDT table
-	init_gdt();
+	// Get the multiboot pointer
+	// multiboot_info_t *mboot_ptr = (multiboot_info_t *) ebx;
 
-	//initialize IDT table
-	isr_install();
-	// irq_install();
-}
-
-void kernel_main(struct kernel_memory_descriptor_t kernel_memory, uint32_t ebx) {
-
-	//initialize isr &irq to help input the 
-	// working outputting to serial output . outb(0x3F8,'A');
-
-	multiboot_info_t *mboot_ptr = (multiboot_info_t *) ebx;
-
+	// Print the multiboot info
 	print_multiboot_info( mboot_ptr);
 
 
-	print_log("\n \n Paging \n \n");
+	// Initialize the gdt & idt.
+	init_gdt();
+	isr_install();
+	// irq_install();
+
+	// Define Paging. 
+
+
+	// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+	print_log("\nPaging \n \n");
 	uint32_t free_pages = initialize_page_allocator(kernel_memory, mboot_ptr);
 	char no[10];
 	itoa(free_pages,no,16);
@@ -51,32 +49,19 @@ void kernel_main(struct kernel_memory_descriptor_t kernel_memory, uint32_t ebx) 
 
 	print_page_directory(pd);
 
-	init_gdt();
-	isr_install();
+	// // init all different 
+	
 	// print_log("\n \nInitializing Descriptor Tables \n \n");
+
+	// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 	// init_descriptor_tables();
 
 	
+	// access shell
+
 	// print_log("Initializing Shell \n \n");
-	// init_shell();
-
-	
-
-
-
-
-
-	
-	// User Acces Stuff
-	// while(shell_access_flag == 0){
-	// 	if(has_access() == 1)
-	// 	{
-	// 		shell_access_flag = 1;
-	// 		start_execution();
-	// 	}
-	// }
-
-	// start_execution();
+	init_shell();
 
 
 }

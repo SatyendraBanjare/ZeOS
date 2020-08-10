@@ -127,3 +127,9 @@ char *itoa(int n, char *str, int base) {
     reverse(str);
     return str;
 }
+
+void print_log_int(int num, int base){
+    char temp[10];
+    itoa(num,temp,base);
+    print_log(temp);
+}
