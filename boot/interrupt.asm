@@ -327,1310 +327,1310 @@ global isr255
 
 ; 0: Divide By Zero Exception
 isr0:
-    push byte 0
-    push byte 0
+    push word 0
+    push word 0
     jmp isr_common_stub
 
 ; 1: Debug Exception
 isr1:
-    push byte 0
-    push byte 1
+    push word 0
+    push word 1
     jmp isr_common_stub
 
 ; 2: Non Maskable Interrupt Exception
 isr2:
-    push byte 0
-    push byte 2
+    push word 0
+    push word 2
     jmp isr_common_stub
 
 ; 3: Int 3 Exception
 isr3:
-    push byte 0
-    push byte 3
+    push word 0
+    push word 3
     jmp isr_common_stub
 
 ; 4: INTO Exception
 isr4:
-    push byte 0
-    push byte 4
+    push word 0
+    push word 4
     jmp isr_common_stub
 
 ; 5: Out of Bounds Exception
 isr5:
-    push byte 0
-    push byte 5
+    push word 0
+    push word 5
     jmp isr_common_stub
 
 ; 6: Invalid Opcode Exception
 isr6:
-    push byte 0
-    push byte 6
+    push word 0
+    push word 6
     jmp isr_common_stub
 
 ; 7: Coprocessor Not Available Exception
 isr7:
-    push byte 0
-    push byte 7
+    push word 0
+    push word 7
     jmp isr_common_stub
 
 ; 8: Double Fault Exception (With Error Code!)
 isr8:
-    push byte 8
+    push word 8
     jmp isr_common_stub
 
 ; 9: Coprocessor Segment Overrun Exception
 isr9:
-    push byte 0
-    push byte 9
+    push word 0
+    push word 9
     jmp isr_common_stub
 
 ; 10: Bad TSS Exception (With Error Code!)
 isr10:
-    push byte 10
+    push word 10
     jmp isr_common_stub
 
 ; 11: Segment Not Present Exception (With Error Code!)
 isr11:
-    push byte 11
+    push word 11
     jmp isr_common_stub
 
 ; 12: Stack Fault Exception (With Error Code!)
 isr12:
-    push byte 12
+    push word 12
     jmp isr_common_stub
 
 ; 13: General Protection Fault Exception (With Error Code!)
 isr13:
-    push byte 13
+    push word 13
     jmp isr_common_stub
 
 ; 14: Page Fault Exception (With Error Code!)
 isr14:
-    push byte 14
+    push word 14
     jmp isr_common_stub
 
 ; 15: Reserved Exception
 isr15:
-    push byte 0
-    push byte 15
+    push word 0
+    push word 15
     jmp isr_common_stub
 
 ; 16: Floating Point Exception
 isr16:
-    push byte 0
-    push byte 16
+    push word 0
+    push word 16
     jmp isr_common_stub
 
 ; 17: Alignment Check Exception
 isr17:
-    push byte 0
-    push byte 17
+    push word 0
+    push word 17
     jmp isr_common_stub
 
 ; 18: Machine Check Exception
 isr18:
-    push byte 0
-    push byte 18
+    push word 0
+    push word 18
     jmp isr_common_stub
 
 ; 19: Reserved
 isr19:
-    push byte 0
-    push byte 19
+    push word 0
+    push word 19
     jmp isr_common_stub
 
 ; 20: Reserved
 isr20:
-    push byte 0
-    push byte 20
+    push word 0
+    push word 20
     jmp isr_common_stub
 
 ; 21: Reserved
 isr21:
-    push byte 0
-    push byte 21
+    push word 0
+    push word 21
     jmp isr_common_stub
 
 ; 22: Reserved
 isr22:
-    push byte 0
-    push byte 22
+    push word 0
+    push word 22
     jmp isr_common_stub
 
 ; 23: Reserved
 isr23:
-    push byte 0
-    push byte 23
+    push word 0
+    push word 23
     jmp isr_common_stub
 
 ; 24: Reserved
 isr24:
-    push byte 0
-    push byte 24
+    push word 0
+    push word 24
     jmp isr_common_stub
 
 ; 25: Reserved
 isr25:
-    push byte 0
-    push byte 25
+    push word 0
+    push word 25
     jmp isr_common_stub
 
 ; 26: Reserved
 isr26:
-    push byte 0
-    push byte 26
+    push word 0
+    push word 26
     jmp isr_common_stub
 
 ; 27: Reserved
 isr27:
-    push byte 0
-    push byte 27
+    push word 0
+    push word 27
     jmp isr_common_stub
 
 ; 28: Reserved
 isr28:
-    push byte 0
-    push byte 28
+    push word 0
+    push word 28
     jmp isr_common_stub
 
 ; 29: Reserved
 isr29:
-    push byte 0
-    push byte 29
+    push word 0
+    push word 29
     jmp isr_common_stub
 
 ; 30: Reserved
 isr30:
-    push byte 0
-    push byte 30
+    push word 0
+    push word 30
     jmp isr_common_stub
 
 ; 31: Reserved
 isr31:
-    push byte 0
-    push byte 31
+    push word 0
+    push word 31
     jmp isr_common_stub
 
 ; IRQ handlers
 irq0:
-	push byte 0
-	push byte 32
+	push word 0
+	push word 32
 	jmp irq_common_stub
 
 irq1:
-	push byte 1
-	push byte 33
+	push word 1
+	push word 33
 	jmp irq_common_stub
 
 irq2:
-	push byte 2
-	push byte 34
+	push word 2
+	push word 34
 	jmp irq_common_stub
 
 irq3:
-	push byte 3
-	push byte 35
+	push word 3
+	push word 35
 	jmp irq_common_stub
 
 irq4:
-	push byte 4
-	push byte 36
+	push word 4
+	push word 36
 	jmp irq_common_stub
 
 irq5:
-	push byte 5
-	push byte 37
+	push word 5
+	push word 37
 	jmp irq_common_stub
 
 irq6:
-	push byte 6
-	push byte 38
+	push word 6
+	push word 38
 	jmp irq_common_stub
 
 irq7:
-	push byte 7
-	push byte 39
+	push word 7
+	push word 39
 	jmp irq_common_stub
 
 irq8:
-	push byte 8
-	push byte 40
+	push word 8
+	push word 40
 	jmp irq_common_stub
 
 irq9:
-	push byte 9
-	push byte 41
+	push word 9
+	push word 41
 	jmp irq_common_stub
 
 irq10:
-	push byte 10
-	push byte 42
+	push word 10
+	push word 42
 	jmp irq_common_stub
 
 irq11:
-	push byte 11
-	push byte 43
+	push word 11
+	push word 43
 	jmp irq_common_stub
 
 irq12:
-	push byte 12
-	push byte 44
+	push word 12
+	push word 44
 	jmp irq_common_stub
 
 irq13:
-	push byte 13
-	push byte 45
+	push word 13
+	push word 45
 	jmp irq_common_stub
 
 irq14:
-	push byte 14
-	push byte 46
+	push word 14
+	push word 46
 	jmp irq_common_stub
 
 irq15:
-	push byte 15
-	push byte 47
+	push word 15
+	push word 47
 	jmp irq_common_stub
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 isr48:
-    push byte 0 
-    push byte 48
+    push word 0 
+    push word 48
     jmp isr_common_stub 
 
 isr49:
-    push byte 0 
-    push byte 49
+    push word 0 
+    push word 49
     jmp isr_common_stub 
 
 isr50:
-    push byte 0 
-    push byte 50
+    push word 0 
+    push word 50
     jmp isr_common_stub 
 
 isr51:
-    push byte 0 
-    push byte 51
+    push word 0 
+    push word 51
     jmp isr_common_stub 
 
 isr52:
-      push byte 0 
-      push byte 52
+      push word 0 
+      push word 52
     jmp isr_common_stub 
 
 isr53:
-    push byte 0 
-    push byte 53
+    push word 0 
+    push word 53
     jmp isr_common_stub 
 
 isr54:
-    push byte 0 
-    push byte 54
+    push word 0 
+    push word 54
     jmp isr_common_stub 
 
 isr55:
-    push byte 0 
-    push byte 55
+    push word 0 
+    push word 55
     jmp isr_common_stub 
 
 isr56:
-    push byte 0 
-    push byte 56
+    push word 0 
+    push word 56
     jmp isr_common_stub 
 
 isr57:
-    push byte 0 
-    push byte 57
+    push word 0 
+    push word 57
     jmp isr_common_stub 
 
 isr58:
-    push byte 0 
-    push byte 58
+    push word 0 
+    push word 58
     jmp isr_common_stub 
 
 isr59:
-    push byte 0 
-    push byte 59
+    push word 0 
+    push word 59
     jmp isr_common_stub 
 
 isr60:
-    push byte 0 
-    push byte 60
+    push word 0 
+    push word 60
     jmp isr_common_stub 
 
 isr61:
-    push byte 0 
-    push byte 61
+    push word 0 
+    push word 61
     jmp isr_common_stub 
 
 isr62:
-    push byte 0 
-    push byte 62
+    push word 0 
+    push word 62
     jmp isr_common_stub 
 
 isr63:
-    push byte 0 
-    push byte 63
+    push word 0 
+    push word 63
     jmp isr_common_stub 
 
 isr64:
-    push byte 0 
-    push byte 64
+    push word 0 
+    push word 64
     jmp isr_common_stub 
 
 isr65:
-    push byte 0 
-    push byte 65
+    push word 0 
+    push word 65
     jmp isr_common_stub 
 
 isr66:
-    push byte 0 
-    push byte 66
+    push word 0 
+    push word 66
     jmp isr_common_stub 
 
 isr67:
-    push byte 0 
-    push byte 67
+    push word 0 
+    push word 67
     jmp isr_common_stub 
 
 isr68:
-    push byte 0 
-    push byte 68
+    push word 0 
+    push word 68
     jmp isr_common_stub 
 
 isr69:
-    push byte 0 
-    push byte 69
+    push word 0 
+    push word 69
     jmp isr_common_stub 
 
 isr70:
-    push byte 0 
-    push byte 70
+    push word 0 
+    push word 70
     jmp isr_common_stub 
 
 isr71:
-    push byte 0 
-    push byte 71
+    push word 0 
+    push word 71
     jmp isr_common_stub 
 
 isr72:
-    push byte 0 
-    push byte 72
+    push word 0 
+    push word 72
     jmp isr_common_stub 
 
 isr73:
-    push byte 0 
-    push byte 73
+    push word 0 
+    push word 73
     jmp isr_common_stub 
 
 isr74:
-    push byte 0 
-    push byte 74
+    push word 0 
+    push word 74
     jmp isr_common_stub 
 
 isr75:
-    push byte 0 
-    push byte 75
+    push word 0 
+    push word 75
     jmp isr_common_stub 
 
 isr76:
-    push byte 0 
-    push byte 76
+    push word 0 
+    push word 76
     jmp isr_common_stub 
 
 isr77:
-    push byte 0 
-    push byte 77
+    push word 0 
+    push word 77
     jmp isr_common_stub 
 
 isr78:
-    push byte 0 
-    push byte 78
+    push word 0 
+    push word 78
     jmp isr_common_stub 
 
 isr79:
-    push byte 0 
-    push byte 79
+    push word 0 
+    push word 79
     jmp isr_common_stub 
 
 isr80:
-    push byte 0 
-    push byte 80
+    push word 0 
+    push word 80
     jmp isr_common_stub 
 
 isr81:
-    push byte 0 
-    push byte 81
+    push word 0 
+    push word 81
     jmp isr_common_stub 
 
 isr82:
-    push byte 0 
-    push byte 82
+    push word 0 
+    push word 82
     jmp isr_common_stub 
 
 isr83:
-    push byte 0 
-    push byte 83
+    push word 0 
+    push word 83
     jmp isr_common_stub 
 
 isr84:
-    push byte 0 
-    push byte 84
+    push word 0 
+    push word 84
     jmp isr_common_stub 
 
 isr85:
-    push byte 0 
-    push byte 85
+    push word 0 
+    push word 85
     jmp isr_common_stub 
 
 isr86:
-    push byte 0 
-    push byte 86
+    push word 0 
+    push word 86
     jmp isr_common_stub 
 
 isr87:
-    push byte 0 
-    push byte 87
+    push word 0 
+    push word 87
     jmp isr_common_stub 
 
 isr88:
-    push byte 0 
-    push byte 88
+    push word 0 
+    push word 88
     jmp isr_common_stub 
 
 isr89:
-    push byte 0 
-    push byte 89
+    push word 0 
+    push word 89
     jmp isr_common_stub 
 
 isr90:
-    push byte 0 
-    push byte 90
+    push word 0 
+    push word 90
     jmp isr_common_stub 
 
 isr91:
-    push byte 0 
-    push byte 91
+    push word 0 
+    push word 91
     jmp isr_common_stub 
 
 isr92:
-    push byte 0 
-    push byte 92
+    push word 0 
+    push word 92
     jmp isr_common_stub 
 
 isr93:
-    push byte 0 
-    push byte 93
+    push word 0 
+    push word 93
     jmp isr_common_stub 
 
 isr94:
-    push byte 0 
-    push byte 94
+    push word 0 
+    push word 94
     jmp isr_common_stub 
 
 isr95:
-    push byte 0 
-    push byte 95
+    push word 0 
+    push word 95
     jmp isr_common_stub 
 
 isr96:
-    push byte 0 
-    push byte 96
+    push word 0 
+    push word 96
     jmp isr_common_stub 
 
 isr97:
-    push byte 0 
-    push byte 97
+    push word 0 
+    push word 97
     jmp isr_common_stub 
 
 isr98:
-    push byte 0 
-    push byte 98
+    push word 0 
+    push word 98
     jmp isr_common_stub 
 
 isr99:
-    push byte 0 
-    push byte 99
+    push word 0 
+    push word 99
     jmp isr_common_stub 
 
 isr100:
-    push byte 0 
-    push byte 100
+    push word 0 
+    push word 100
     jmp isr_common_stub 
 
 isr101:
-    push byte 0 
-    push byte 101
+    push word 0 
+    push word 101
     jmp isr_common_stub 
 
 isr102:
-    push byte 0 
-    push byte 102
+    push word 0 
+    push word 102
     jmp isr_common_stub 
 
 isr103:
-    push byte 0 
-    push byte 103
+    push word 0 
+    push word 103
     jmp isr_common_stub 
 
 isr104:
-    push byte 0 
-    push byte 104
+    push word 0 
+    push word 104
     jmp isr_common_stub 
 
 isr105:
-    push byte 0 
-    push byte 105
+    push word 0 
+    push word 105
     jmp isr_common_stub 
 
 isr106:
-    push byte 0 
-    push byte 106
+    push word 0 
+    push word 106
     jmp isr_common_stub 
 
 isr107:
-    push byte 0 
-    push byte 107
+    push word 0 
+    push word 107
     jmp isr_common_stub 
 
 isr108:
-    push byte 0 
-    push byte 108
+    push word 0 
+    push word 108
     jmp isr_common_stub 
 
 isr109:
-    push byte 0 
-    push byte 109
+    push word 0 
+    push word 109
     jmp isr_common_stub 
 
 isr110:
-    push byte 0 
-    push byte 110
+    push word 0 
+    push word 110
     jmp isr_common_stub 
 
 isr111:
-    push byte 0 
-    push byte 111
+    push word 0 
+    push word 111
     jmp isr_common_stub 
 
 isr112:
-    push byte 0 
-    push byte 112
+    push word 0 
+    push word 112
     jmp isr_common_stub 
 
 isr113:
-    push byte 0 
-    push byte 113
+    push word 0 
+    push word 113
     jmp isr_common_stub 
 
 isr114:
-    push byte 0 
-    push byte 114
+    push word 0 
+    push word 114
     jmp isr_common_stub 
 
 isr115:
-    push byte 0 
-    push byte 115
+    push word 0 
+    push word 115
     jmp isr_common_stub 
 
 isr116:
-    push byte 0 
-    push byte 116
+    push word 0 
+    push word 116
     jmp isr_common_stub 
 
 isr117:
-    push byte 0 
-    push byte 117
+    push word 0 
+    push word 117
     jmp isr_common_stub 
 
 isr118:
-    push byte 0 
-    push byte 118
+    push word 0 
+    push word 118
     jmp isr_common_stub 
 
 isr119:
-    push byte 0 
-    push byte 119
+    push word 0 
+    push word 119
     jmp isr_common_stub 
 
 isr120:
-    push byte 0 
-    push byte 120
+    push word 0 
+    push word 120
     jmp isr_common_stub 
 
 isr121:
-    push byte 0 
-    push byte 121
+    push word 0 
+    push word 121
     jmp isr_common_stub 
 
 isr122:
-    push byte 0 
-    push byte 122
+    push word 0 
+    push word 122
     jmp isr_common_stub 
 
 isr123:
-    push byte 0 
-    push byte 123
+    push word 0 
+    push word 123
     jmp isr_common_stub 
 
 isr124:
-    push byte 0 
-    push byte 124
+    push word 0 
+    push word 124
     jmp isr_common_stub 
 
 isr125:
-    push byte 0 
-    push byte 125
+    push word 0 
+    push word 125
     jmp isr_common_stub 
 
 isr126:
-    push byte 0 
-    push byte 126
+    push word 0 
+    push word 126
     jmp isr_common_stub 
 
 isr127:
-    push byte 0 
-    push byte 127
+    push word 0 
+    push word 127
     jmp isr_common_stub 
 
 isr128:
-    push byte 0 
-    push byte 128
+    push word 0 
+    push word 128
     jmp isr_common_stub 
 
 isr129:
-    push byte 0 
-    push byte 129
+    push word 0 
+    push word 129
     jmp isr_common_stub 
 
 isr130:
-    push byte 0 
-    push byte 130
+    push word 0 
+    push word 130
     jmp isr_common_stub 
 
 isr131:
-    push byte 0 
-    push byte 131
+    push word 0 
+    push word 131
     jmp isr_common_stub 
 
 isr132:
-    push byte 0 
-    push byte 132
+    push word 0 
+    push word 132
     jmp isr_common_stub 
 
 isr133:
-    push byte 0 
-    push byte 133
+    push word 0 
+    push word 133
     jmp isr_common_stub 
 
 isr134:
-    push byte 0 
-    push byte 134
+    push word 0 
+    push word 134
     jmp isr_common_stub 
 
 isr135:
-    push byte 0 
-    push byte 135
+    push word 0 
+    push word 135
     jmp isr_common_stub 
 
 isr136:
-    push byte 0 
-    push byte 136
+    push word 0 
+    push word 136
     jmp isr_common_stub 
 
 isr137:
-    push byte 0 
-    push byte 137
+    push word 0 
+    push word 137
     jmp isr_common_stub 
 
 isr138:
-    push byte 0 
-    push byte 138
+    push word 0 
+    push word 138
     jmp isr_common_stub 
 
 isr139:
-    push byte 0 
-    push byte 139
+    push word 0 
+    push word 139
     jmp isr_common_stub 
 
 isr140:
-    push byte 0 
-    push byte 140
+    push word 0 
+    push word 140
     jmp isr_common_stub 
 
 isr141:
-    push byte 0 
-    push byte 141
+    push word 0 
+    push word 141
     jmp isr_common_stub 
 
 isr142:
-    push byte 0 
-    push byte 142
+    push word 0 
+    push word 142
     jmp isr_common_stub 
 
 isr143:
-    push byte 0 
-    push byte 143
+    push word 0 
+    push word 143
     jmp isr_common_stub 
 
 isr144:
-    push byte 0 
-    push byte 144
+    push word 0 
+    push word 144
     jmp isr_common_stub 
 
 isr145:
-    push byte 0 
-    push byte 145
+    push word 0 
+    push word 145
     jmp isr_common_stub 
 
 isr146:
-    push byte 0 
-    push byte 146
+    push word 0 
+    push word 146
     jmp isr_common_stub 
 
 isr147:
-    push byte 0 
-    push byte 147
+    push word 0 
+    push word 147
     jmp isr_common_stub 
 
 isr148:
-    push byte 0 
-    push byte 148
+    push word 0 
+    push word 148
     jmp isr_common_stub 
 
 isr149:
-    push byte 0 
-    push byte 149
+    push word 0 
+    push word 149
     jmp isr_common_stub 
 
 isr150:
-    push byte 0 
-    push byte 150
+    push word 0 
+    push word 150
     jmp isr_common_stub 
 
 isr151:
-    push byte 0 
-    push byte 151
+    push word 0 
+    push word 151
     jmp isr_common_stub 
 
 isr152:
-    push byte 0 
-    push byte 152
+    push word 0 
+    push word 152
     jmp isr_common_stub 
 
 isr153:
-    push byte 0 
-    push byte 153
+    push word 0 
+    push word 153
     jmp isr_common_stub 
 
 isr154:
-    push byte 0 
-    push byte 154
+    push word 0 
+    push word 154
     jmp isr_common_stub 
 
 isr155:
-    push byte 0 
-    push byte 155
+    push word 0 
+    push word 155
     jmp isr_common_stub 
 
 isr156:
-    push byte 0 
-    push byte 156
+    push word 0 
+    push word 156
     jmp isr_common_stub 
 
 isr157:
-    push byte 0 
-    push byte 157
+    push word 0 
+    push word 157
     jmp isr_common_stub 
 
 isr158:
-    push byte 0 
-    push byte 158
+    push word 0 
+    push word 158
     jmp isr_common_stub 
 
 isr159:
-    push byte 0 
-    push byte 159
+    push word 0 
+    push word 159
     jmp isr_common_stub 
 
 isr160:
-    push byte 0 
-    push byte 160
+    push word 0 
+    push word 160
     jmp isr_common_stub 
 
 isr161:
-    push byte 0 
-    push byte 161
+    push word 0 
+    push word 161
     jmp isr_common_stub 
 
 isr162:
-    push byte 0 
-    push byte 162
+    push word 0 
+    push word 162
     jmp isr_common_stub 
 
 isr163:
-    push byte 0 
-    push byte 163
+    push word 0 
+    push word 163
     jmp isr_common_stub 
 
 isr164:
-    push byte 0 
-    push byte 164
+    push word 0 
+    push word 164
     jmp isr_common_stub 
 
 isr165:
-    push byte 0 
-    push byte 165
+    push word 0 
+    push word 165
     jmp isr_common_stub 
 
 isr166:
-    push byte 0 
-    push byte 166
+    push word 0 
+    push word 166
     jmp isr_common_stub 
 
 isr167:
-    push byte 0 
-    push byte 167
+    push word 0 
+    push word 167
     jmp isr_common_stub 
 
 isr168:
-    push byte 0 
-    push byte 168
+    push word 0 
+    push word 168
     jmp isr_common_stub 
 
 isr169:
-    push byte 0 
-    push byte 169
+    push word 0 
+    push word 169
     jmp isr_common_stub 
 
 isr170:
-    push byte 0 
-    push byte 170
+    push word 0 
+    push word 170
     jmp isr_common_stub 
 
 isr171:
-    push byte 0 
-    push byte 171
+    push word 0 
+    push word 171
     jmp isr_common_stub 
 
 isr172:
-    push byte 0 
-    push byte 172
+    push word 0 
+    push word 172
     jmp isr_common_stub 
 
 isr173:
-    push byte 0 
-    push byte 173
+    push word 0 
+    push word 173
     jmp isr_common_stub 
 
 isr174:
-    push byte 0 
-    push byte 174
+    push word 0 
+    push word 174
     jmp isr_common_stub 
 
 isr175:
-    push byte 0 
-    push byte 175
+    push word 0 
+    push word 175
     jmp isr_common_stub 
 
 isr176:
-    push byte 0 
-    push byte 176
+    push word 0 
+    push word 176
     jmp isr_common_stub 
 
 isr177:
-    push byte 0 
-    push byte 177
+    push word 0 
+    push word 177
     jmp isr_common_stub 
 
 isr178:
-    push byte 0 
-    push byte 178
+    push word 0 
+    push word 178
     jmp isr_common_stub 
 
 isr179:
-    push byte 0 
-    push byte 179
+    push word 0 
+    push word 179
     jmp isr_common_stub 
 
 isr180:
-    push byte 0 
-    push byte 180
+    push word 0 
+    push word 180
     jmp isr_common_stub 
 
 isr181:
-    push byte 0 
-    push byte 181
+    push word 0 
+    push word 181
     jmp isr_common_stub 
 
 isr182:
-    push byte 0 
-    push byte 182
+    push word 0 
+    push word 182
     jmp isr_common_stub 
 
 isr183:
-    push byte 0 
-    push byte 183
+    push word 0 
+    push word 183
     jmp isr_common_stub 
 
 isr184:
-    push byte 0 
-    push byte 184
+    push word 0 
+    push word 184
     jmp isr_common_stub 
 
 isr185:
-    push byte 0 
-    push byte 185
+    push word 0 
+    push word 185
     jmp isr_common_stub 
 
 isr186:
-    push byte 0 
-    push byte 186
+    push word 0 
+    push word 186
     jmp isr_common_stub 
 
 isr187:
-    push byte 0 
-    push byte 187
+    push word 0 
+    push word 187
     jmp isr_common_stub 
 
 isr188:
-    push byte 0 
-    push byte 188
+    push word 0 
+    push word 188
     jmp isr_common_stub 
 
 isr189:
-    push byte 0 
-    push byte 189
+    push word 0 
+    push word 189
     jmp isr_common_stub 
 
 isr190:
-    push byte 0 
-    push byte 190
+    push word 0 
+    push word 190
     jmp isr_common_stub 
 
 isr191:
-    push byte 0 
-    push byte 191
+    push word 0 
+    push word 191
     jmp isr_common_stub 
 
 isr192:
-    push byte 0 
-    push byte 192
+    push word 0 
+    push word 192
     jmp isr_common_stub 
 
 isr193:
-    push byte 0 
-    push byte 193
+    push word 0 
+    push word 193
     jmp isr_common_stub 
 
 isr194:
-    push byte 0 
-    push byte 194
+    push word 0 
+    push word 194
     jmp isr_common_stub 
 
 isr195:
-    push byte 0 
-    push byte 195
+    push word 0 
+    push word 195
     jmp isr_common_stub 
 
 isr196:
-    push byte 0 
-    push byte 196
+    push word 0 
+    push word 196
     jmp isr_common_stub 
 
 isr197:
-    push byte 0 
-    push byte 197
+    push word 0 
+    push word 197
     jmp isr_common_stub 
 
 isr198:
-    push byte 0 
-    push byte 198
+    push word 0 
+    push word 198
     jmp isr_common_stub 
 
 isr199:
-    push byte 0 
-    push byte 199
+    push word 0 
+    push word 199
     jmp isr_common_stub 
 
 isr200:
-    push byte 0 
-    push byte 200
+    push word 0 
+    push word 200
     jmp isr_common_stub 
 
 isr201:
-    push byte 0 
-    push byte 201
+    push word 0 
+    push word 201
     jmp isr_common_stub 
 
 isr202:
-    push byte 0 
-    push byte 202
+    push word 0 
+    push word 202
     jmp isr_common_stub 
 
 isr203:
-    push byte 0 
-    push byte 203
+    push word 0 
+    push word 203
     jmp isr_common_stub 
 
 isr204:
-    push byte 0 
-    push byte 204
+    push word 0 
+    push word 204
     jmp isr_common_stub 
 
 isr205:
-    push byte 0 
-    push byte 205
+    push word 0 
+    push word 205
     jmp isr_common_stub 
 
 isr206:
-    push byte 0 
-    push byte 206
+    push word 0 
+    push word 206
     jmp isr_common_stub 
 
 isr207:
-    push byte 0 
-    push byte 207
+    push word 0 
+    push word 207
     jmp isr_common_stub 
 
 isr208:
-    push byte 0 
-    push byte 208
+    push word 0 
+    push word 208
     jmp isr_common_stub 
 
 isr209:
-    push byte 0 
-    push byte 209
+    push word 0 
+    push word 209
     jmp isr_common_stub 
 
 isr210:
-    push byte 0 
-    push byte 210
+    push word 0 
+    push word 210
     jmp isr_common_stub 
 
 isr211:
-    push byte 0 
-    push byte 211
+    push word 0 
+    push word 211
     jmp isr_common_stub 
 
 isr212:
-    push byte 0 
-    push byte 212
+    push word 0 
+    push word 212
     jmp isr_common_stub 
 
 isr213:
-    push byte 0 
-    push byte 213
+    push word 0 
+    push word 213
     jmp isr_common_stub 
 
 isr214:
-    push byte 0 
-    push byte 214
+    push word 0 
+    push word 214
     jmp isr_common_stub 
 
 isr215:
-    push byte 0 
-    push byte 215
+    push word 0 
+    push word 215
     jmp isr_common_stub 
 
 isr216:
-    push byte 0 
-    push byte 216
+    push word 0 
+    push word 216
     jmp isr_common_stub 
 
 isr217:
-    push byte 0 
-    push byte 217
+    push word 0 
+    push word 217
     jmp isr_common_stub 
 
 isr218:
-    push byte 0 
-    push byte 218
+    push word 0 
+    push word 218
     jmp isr_common_stub 
 
 isr219:
-    push byte 0 
-    push byte 219
+    push word 0 
+    push word 219
     jmp isr_common_stub 
 
 isr220:
-    push byte 0 
-    push byte 220
+    push word 0 
+    push word 220
     jmp isr_common_stub 
 
 isr221:
-    push byte 0 
-    push byte 221
+    push word 0 
+    push word 221
     jmp isr_common_stub 
 
 isr222:
-    push byte 0 
-    push byte 222
+    push word 0 
+    push word 222
     jmp isr_common_stub 
 
 isr223:
-    push byte 0 
-    push byte 223
+    push word 0 
+    push word 223
     jmp isr_common_stub 
 
 isr224:
-    push byte 0 
-    push byte 224
+    push word 0 
+    push word 224
     jmp isr_common_stub 
 
 isr225:
-    push byte 0 
-    push byte 225
+    push word 0 
+    push word 225
     jmp isr_common_stub 
 
 isr226:
-    push byte 0 
-    push byte 226
+    push word 0 
+    push word 226
     jmp isr_common_stub 
 
 isr227:
-    push byte 0 
-    push byte 227
+    push word 0 
+    push word 227
     jmp isr_common_stub 
 
 isr228:
-    push byte 0 
-    push byte 228
+    push word 0 
+    push word 228
     jmp isr_common_stub 
 
 isr229:
-    push byte 0 
-    push byte 229
+    push word 0 
+    push word 229
     jmp isr_common_stub 
 
 isr230:
-    push byte 0 
-    push byte 230
+    push word 0 
+    push word 230
     jmp isr_common_stub 
 
 isr231:
-    push byte 0 
-    push byte 231
+    push word 0 
+    push word 231
     jmp isr_common_stub 
 
 isr232:
-    push byte 0 
-    push byte 232
+    push word 0 
+    push word 232
     jmp isr_common_stub 
 
 isr233:
-    push byte 0 
-    push byte 233
+    push word 0 
+    push word 233
     jmp isr_common_stub 
 
 isr234:
-    push byte 0 
-    push byte 234
+    push word 0 
+    push word 234
     jmp isr_common_stub 
 
 isr235:
-    push byte 0 
-    push byte 235
+    push word 0 
+    push word 235
     jmp isr_common_stub 
 
 isr236:
-    push byte 0 
-    push byte 236
+    push word 0 
+    push word 236
     jmp isr_common_stub 
 
 isr237:
-    push byte 0 
-    push byte 237
+    push word 0 
+    push word 237
     jmp isr_common_stub 
 
 isr238:
-    push byte 0 
-    push byte 238
+    push word 0 
+    push word 238
     jmp isr_common_stub 
 
 isr239:
-    push byte 0 
-    push byte 239
+    push word 0 
+    push word 239
     jmp isr_common_stub 
 
 isr240:
-    push byte 0 
-    push byte 240
+    push word 0 
+    push word 240
     jmp isr_common_stub 
 
 isr241:
-    push byte 0 
-    push byte 241
+    push word 0 
+    push word 241
     jmp isr_common_stub 
 
 isr242:
-    push byte 0 
-    push byte 242
+    push word 0 
+    push word 242
     jmp isr_common_stub 
 
 isr243:
-    push byte 0 
-    push byte 243
+    push word 0 
+    push word 243
     jmp isr_common_stub 
 
 isr244:
-    push byte 0 
-    push byte 244
+    push word 0 
+    push word 244
     jmp isr_common_stub 
 
 isr245:
-    push byte 0 
-    push byte 245
+    push word 0 
+    push word 245
     jmp isr_common_stub 
 
 isr246:
-    push byte 0 
-    push byte 246
+    push word 0 
+    push word 246
     jmp isr_common_stub 
 
 isr247:
-    push byte 0 
-    push byte 247
+    push word 0 
+    push word 247
     jmp isr_common_stub 
 
 isr248:
-    push byte 0 
-    push byte 248
+    push word 0 
+    push word 248
     jmp isr_common_stub 
 
 isr249:
-    push byte 0 
-    push byte 249
+    push word 0 
+    push word 249
     jmp isr_common_stub 
 
 isr250:
-    push byte 0 
-    push byte 250
+    push word 0 
+    push word 250
     jmp isr_common_stub 
 
 isr251:
-    push byte 0 
-    push byte 251
+    push word 0 
+    push word 251
     jmp isr_common_stub 
 
 isr252:
-    push byte 0 
-    push byte 252
+    push word 0 
+    push word 252
     jmp isr_common_stub 
 
 isr253:
-    push byte 0 
-    push byte 253
+    push word 0 
+    push word 253
     jmp isr_common_stub 
 
 isr254:
-    push byte 0 
-    push byte 254
+    push word 0 
+    push word 254
     jmp isr_common_stub 
 
 isr255:
-    push byte 0 
-    push byte 255
+    push word 0 
+    push word 255
     jmp isr_common_stub 

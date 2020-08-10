@@ -6,6 +6,7 @@
 #include "include/terminal/terminal.h"
 #include "include/common/helper.h"
 #include "include/multiboot/multiboot_util.h"
+#include "include/cpu/memory/paging.h"
 
 #if defined(__linux__)
 #error "You are not using a cross-compiler, you will most certainly run into trouble"
@@ -21,7 +22,7 @@ void init_descriptor_tables(){
 
 	//initialize IDT table
 	isr_install();
-	irq_install();
+	// irq_install();
 }
 
 void kernel_main(struct kernel_memory_descriptor_t kernel_memory, uint32_t ebx) {
@@ -33,14 +34,35 @@ void kernel_main(struct kernel_memory_descriptor_t kernel_memory, uint32_t ebx) 
 
 	print_multiboot_info( mboot_ptr);
 
-	print_log("\n \nInitializing Descriptor Tables \n \n");
-	init_descriptor_tables();
+
+	print_log("\n \n Paging \n \n");
+	uint32_t free_pages = initialize_page_allocator(kernel_memory, mboot_ptr);
+	char no[10];
+	itoa(free_pages,no,16);
+	print_log("Free Pages :"); print_log(no); print_log("\n");
+
+
+	page_directory_t pd = initialize_page_directory();
+	print_log("\n \n Initialized Page Directory \n\n");
+	uint32_t pdnum = (uint32_t) pd;
+	char pdno[10];
+	itoa(pdnum,pdno,16);
+	print_log("Address of Page Directory : "); print_log(pdno); print_log("\n");
+
+	print_page_directory(pd);
+
+	init_gdt();
+	isr_install();
+	// print_log("\n \nInitializing Descriptor Tables \n \n");
+	// init_descriptor_tables();
 
 	
-	print_log("Initializing Shell \n \n");
-	init_shell();
+	// print_log("Initializing Shell \n \n");
+	// init_shell();
 
 	
+
+
 
 
 
