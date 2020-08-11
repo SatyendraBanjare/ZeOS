@@ -2,6 +2,7 @@
 #include "include/cpu/gdt.h"
 #include "include/cpu/idt.h"
 #include "include/cpu/isr.h"
+#include "include/cpu/pic.h"
 #include "include/cpu/state.h"
 #include "include/terminal/terminal.h"
 #include "include/common/helper.h"
@@ -22,14 +23,17 @@ void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multib
 	// Print the multiboot info
 	print_multiboot_info( mboot_ptr);
 
+	clear_screen_full();
 
 	// Initialize the gdt & idt.
 	init_gdt();
-	isr_install();
+	init_idt();
+	// isr_install();
 	// irq_install();
 
 	// Define Paging. 
 
+	pic_init();
 
 	// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -61,7 +65,8 @@ void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multib
 	// access shell
 
 	// print_log("Initializing Shell \n \n");
-	init_shell();
+	// init_shell();
 
+	// while(1){}
 
 }

@@ -56,7 +56,7 @@ zeos.iso: zeos.bin
 #     grub-mkrescue -o zeos.iso isodir
 
 run: zeos.iso
-	qemu-system-i386 -cdrom zeos.iso -serial file:log/log.txt
+	qemu-system-i386 -cdrom zeos.iso -serial stdio
 
 debug:
 	qemu-system-i386 -cdrom zeos.iso -d guest_errors,int &

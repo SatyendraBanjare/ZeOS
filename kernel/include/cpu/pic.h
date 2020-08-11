@@ -1,13 +1,16 @@
-#ifndef TIMER_H
-#define TIMER_H
+#ifndef PIC_H
+#define PIC_H
 
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
 
 #include "state.h"
+#include "util.h"
 
-// void init_timer(uint32_t freq);
-// uint32_t rdtsc();
+
+void pic_init();
+void pic_acknowledge();
+
 
 #endif
