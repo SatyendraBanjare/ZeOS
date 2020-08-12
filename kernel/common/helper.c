@@ -133,3 +133,9 @@ void print_log_int(int num, int base){
     itoa(num,temp,base);
     print_log(temp);
 }
+
+void zprint_int(int num){
+    char temp[10];
+    itoa(num,temp,10);
+    zprint(temp);
+}

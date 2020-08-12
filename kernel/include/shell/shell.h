@@ -18,4 +18,7 @@ void init_shell();
 
 char * get_alias();
 int get_uptime();
+void print_footer();
+void print_header();
+void print_blank();
 #endif

@@ -20,6 +20,7 @@ void print_log(char *message);
 char *itoa(int n, char *str, int base);
 
 void print_log_int(int num, int base);
+void zprint_int(int num);
 // void memory_copy(uint8_t *source, uint8_t *dest, int nbytes);
 
 #endif

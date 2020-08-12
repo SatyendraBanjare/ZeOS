@@ -3,7 +3,9 @@
 #include "include/cpu/idt.h"
 #include "include/cpu/isr.h"
 #include "include/cpu/pic.h"
+#include "include/cpu/timer.h"
 #include "include/cpu/state.h"
+#include "include/cpu/serial.h"
 #include "include/terminal/terminal.h"
 #include "include/common/helper.h"
 #include "include/multiboot/multiboot_util.h"
@@ -15,17 +17,35 @@
 
 extern void enable_paging();
 
+void printuptime(int input)
+{
+    char buffer[11] = "0000000000";
+    for (int i = 0; i < 10; i++)
+    {
+        int temp = input % 10;
+        buffer[10 - i] = (char)(temp + 0x30);
+        input /= 10;
+    }
+    zprint_time(buffer);
+}
+
+
 void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multiboot_info_t *mboot_ptr) {
 
 	// Get the multiboot pointer
 	// multiboot_info_t *mboot_ptr = (multiboot_info_t *) ebx;
 
 	// Print the multiboot info
-	print_multiboot_info( mboot_ptr);
+	
 
 	clear_screen_full();
 
 	// Initialize the gdt & idt.
+
+	serial_init();
+
+	print_multiboot_info( mboot_ptr);
+
 	init_gdt();
 	init_idt();
 	// isr_install();
@@ -33,7 +53,13 @@ void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multib
 
 	// Define Paging. 
 
+	init_timer(50);
+
+
+	init_shell();
+	
 	pic_init();
+
 
 	// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -59,14 +85,9 @@ void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multib
 
 	// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-	// init_descriptor_tables();
-
 	
-	// access shell
-
-	// print_log("Initializing Shell \n \n");
-	// init_shell();
-
-	// while(1){}
+	while(1){
+		printuptime(rdtsc());
+	}
 
 }

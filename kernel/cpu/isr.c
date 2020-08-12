@@ -2,8 +2,9 @@
 #include "../include/cpu/isr.h"
 #include "../include/cpu/util.h"
 #include "../include/cpu/pic.h"
-// #include "../include/cpu/timer.h"
+#include "../include/cpu/timer.h"
 #include "../include/terminal/terminal.h"
+#include "../include/drivers/keyboard.h"
 
 // state_t interrupt_handlers[MAX_IDT_ENTRIES_COUNT];
 
@@ -358,7 +359,7 @@
 //     init_keyboard();
 // }
 
-
+#define INT_TIMER 0x00000008
 #define INT_KEYBOARD 0x00000009
 #define INT_GENERAL_PROTECTION_FAULT 0x0000000D
 #define INT_PAGE_FAULT 0x0000000E
@@ -393,39 +394,47 @@ void interrupt_handler(struct cpu_statez cpu, uint32_t interrupt_number, uint32_
   print_log("\n");
 
   switch(interrupt_number) {
-    case(INT_KEYBOARD):
-    // keyboard_interrupt_handler();
-    print_log("KEYBOARD");
-      break;
-    case(INT_PAGE_FAULT):
-      print_log("Interrupt was a page fault. Here's what I know:\n");
-      print_log("- Tried to access linear address ");
-      print_log_int( cpu.cr2,10);
-      print_log("\n");
-      if (error_code & 0b1) {
-        print_log("- Couldn't complete because of page-protection violation\n");
-      } else {
-        print_log("- Couldn't complete because page was not present\n");
-      }
-      if (error_code & 0b10) {
-        print_log("- This was an attempt to WRITE to this address.\n");
-      } else {
-        print_log("- This was an attempt to READ from this address.\n");
-      }
-      if (error_code & 0b100) {
-        print_log("- Memory access came from user.\n");
-      } else {
-        print_log("- Memory access came from kernel.\n");
-      }
-      if (error_code & 0b1000) {
-        print_log("- caused by reading a 1 in a reserved field.\n");
-      }
-      if (error_code & 0b10000) {
-        print_log("- caused by an instruction fetch.\n");
-      }
-      while(1){};
-      break;
 
+    case(INT_TIMER):{// keyboard_interrupt_handler();
+        print_log("TIMER");
+        timer_callback();
+          break;
+    }
+
+    case(INT_KEYBOARD):{// keyboard_interrupt_handler();
+        print_log("KEYBOARD");
+        keyboard_callback();
+          break;
+    }
+    case(INT_PAGE_FAULT):{  
+          print_log("Interrupt was a page fault. Here's what I know:\n");
+          print_log("- Tried to access linear address ");
+          print_log_int( cpu.cr2,10);
+          print_log("\n");
+          if (error_code & 0b1) {
+            print_log("- Couldn't complete because of page-protection violation\n");
+          } else {
+            print_log("- Couldn't complete because page was not present\n");
+          }
+          if (error_code & 0b10) {
+            print_log("- This was an attempt to WRITE to this address.\n");
+          } else {
+            print_log("- This was an attempt to READ from this address.\n");
+          }
+          if (error_code & 0b100) {
+            print_log("- Memory access came from user.\n");
+          } else {
+            print_log("- Memory access came from kernel.\n");
+          }
+          if (error_code & 0b1000) {
+            print_log("- caused by reading a 1 in a reserved field.\n");
+          }
+          if (error_code & 0b10000) {
+            print_log("- caused by an instruction fetch.\n");
+          }
+          while(1){};
+          break;
+    }
     default:
       print_log("ERROR: Unabled to handle interrupt: ");
       print_log_int( interrupt_number,10);
