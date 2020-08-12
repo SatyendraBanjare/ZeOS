@@ -50,7 +50,7 @@ const uint16_t KERNAL_DATA_SEGMENT_SELECTOR = sizeof(struct segment_descriptor_t
 struct segment_descriptor_t gdt[3];
 
 enum segment_selector_t {
-  NULL_DESCRIPTOR, // Not used but has to be here
+  NULL_DESCRIPTOR_INDEX, // Not used but has to be here
   KERNAL_CODE_SEGMENT_INDEX, // Offset 0x8
   KERNAL_DATA_SEGMENT_INDEX // Offset 0x10
 };
@@ -69,6 +69,13 @@ struct gdt_description_structure_t {
 void init_gdt() {
   gdt_description_structure.size = sizeof(gdt) - 1;
   gdt_description_structure.offset = (uint32_t) gdt;
+
+  gdt[NULL_DESCRIPTOR_INDEX].limit_0_15 = 0;
+  gdt[NULL_DESCRIPTOR_INDEX].base_0_15 = 0;
+  gdt[NULL_DESCRIPTOR_INDEX].base_16_23 = 0;
+  gdt[NULL_DESCRIPTOR_INDEX].access_byte = 0;
+  gdt[NULL_DESCRIPTOR_INDEX].flags_and_limit_16_19 = 0;
+  gdt[NULL_DESCRIPTOR_INDEX].base_24_31 = 0;
 
   gdt[KERNAL_CODE_SEGMENT_INDEX].limit_0_15 = 0xFFFF;
   gdt[KERNAL_CODE_SEGMENT_INDEX].base_0_15 = 0x0000;
