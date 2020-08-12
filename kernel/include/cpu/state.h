@@ -5,12 +5,13 @@
 * This describes the Registers at any given point of
 * time thus describing the cpu state completely.
 */
-typedef struct {
+struct cpu_state {
+   uint32_t cr2;
    uint32_t ds; /* Data segment selector */
    uint32_t edi, esi, ebp, useless, ebx, edx, ecx, eax; /* Pushed by pusha. */
    uint32_t int_no, err_code; /* Interrupt number and error code (if applicable) */
    uint32_t eip, cs, eflags, esp, ss; /* Pushed by the processor automatically */
-} cpu_state;
+} __attribute__((packed));
 
 struct kernel_memory_descriptor_t {
   uint32_t kernel_virtual_start;

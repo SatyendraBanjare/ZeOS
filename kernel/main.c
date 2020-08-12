@@ -29,6 +29,10 @@ void printuptime(int input)
     zprint_time(buffer);
 }
 
+uint32_t trigger_page_fault() {
+  uint32_t* unmapped_address = (uint32_t *) 0x500000; // 5 MB
+  return *unmapped_address;
+}
 
 void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multiboot_info_t *mboot_ptr) {
 
@@ -85,7 +89,10 @@ void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multib
 
 	// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-	
+	// Working Page Fault uncomment to see in action !!
+	// uint32_t fault = trigger_page_fault();
+
+
 	while(1){
 		printuptime(rdtsc());
 	}

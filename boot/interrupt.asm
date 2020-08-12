@@ -1537,32 +1537,33 @@ interrupt_handler_255:
   jmp     common_interrupt_handler
 
 common_interrupt_handler:               ; the common parts of the generic interrupt handler
-  ; save the registers
-  push    eax
-  push    ebx
-  push    ecx
-  push    edx
-  push    esi
-  push    edi
-  push    ebp
-  mov     eax, cr2
-  push    eax
+  
+  ;1. save the registers
 
-  ; call the C function
-  call    interrupt_handler
-
-  ; restore the registers
-  add    esp, 4 ; cr2
-  pop    ebp
-  pop    edi
-  pop    esi
-  pop    edx
-  pop    ecx
-  pop    ebx
-  pop    eax
-
-  ; pop error_code and interrupt_number off the stack
-  add     esp, 8
-
-  ; return to the code that got interrupted
-  iret
+    pusha                   ; Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
+    mov ax, ds              ; Lower 16-bits of eax = ds.
+    mov eax, cr2
+    push eax
+    mov ax, 0x10            ; kernel data segment descriptor
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    push esp                ; cpu_state *r
+    
+  ; 2. Call C handler
+  
+    cld                     ; C code following the sysV ABI requires DF to be clear on function entry
+    call interrupt_handler
+    
+  ; 3. Restore state
+   
+    pop eax 
+    pop eax
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    popa
+    add esp, 8              ; Cleans up the pushed error code and pushed ISR number
+    iret                    ; pops  CS, EIP, EFLAGS, SS, and ESP

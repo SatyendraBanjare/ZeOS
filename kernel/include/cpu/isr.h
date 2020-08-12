@@ -1,6 +1,8 @@
 #ifndef ISR_H
 #define ISR_H
 
+#include "state.h"
+
 void interrupt_handler_0();
 void interrupt_handler_1();
 void interrupt_handler_2();
@@ -259,18 +261,18 @@ void interrupt_handler_254();
 void interrupt_handler_255();
 
 
-struct cpu_statez {
-  uint32_t cr2;
-  uint32_t ebp;
-  uint32_t edi;
-  uint32_t esi;
-  uint32_t edx;
-  uint32_t ecx;
-  uint32_t ebx;
-  uint32_t eax;
-} __attribute__((packed));
+// struct cpu_statez {
+//   uint32_t cr2;
+//   uint32_t ebp;
+//   uint32_t edi;
+//   uint32_t esi;
+//   uint32_t edx;
+//   uint32_t ecx;
+//   uint32_t ebx;
+//   uint32_t eax;
+// } __attribute__((packed));
 
-void interrupt_handler(struct cpu_statez cpu, uint32_t interrupt_number, uint32_t error_code, uint32_t eip);
+void interrupt_handler(struct cpu_state cpu);
 
 
 #endif

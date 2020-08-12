@@ -329,22 +329,22 @@
 // void isr_handler(cpu_state *state) {
 //     zprint("received interrupt: ");
 //     char s[3];
-//     int_to_ascii(state->int_no, s);
+//     int_to_ascii(state.int_no, s);
 //     zprint(s);
 //     zprint("\n");
-//     zprint(exception_messages[state->int_no]);
+//     zprint(exception_messages[state.int_no]);
 //     zprint("\n");
 // }
 
 // void irq_handler(cpu_state *state) {
 //     /* After every interrupt we need to send an EOI to the PICs
 //      * or they will not send another interrupt again */
-//     if (state->int_no >= 40) outb(0xA0, 0x20); /* slave */
+//     if (state.int_no >= 40) outb(0xA0, 0x20); /* slave */
 //     outb(0x20, 0x20); /* master */
 
 //     /* Handle the interrupt in a more modular way */
-//     if (interrupt_handlers[state->int_no] != 0) {
-//         state_t handler = interrupt_handlers[state->int_no];
+//     if (interrupt_handlers[state.int_no] != 0) {
+//         state_t handler = interrupt_handlers[state.int_no];
 //         handler(state);
 //     }
 // }
@@ -359,19 +359,26 @@
 //     init_keyboard();
 // }
 
+//            struct cpu_state {
+//               uint32_t ds; /* Data segment selector */
+//               uint32_t edi, esi, ebp, useless, ebx, edx, ecx, eax; /* Pushed by pusha. */
+//               uint32_t int_no, err_code; /* Interrupt number and error code (if applicable) */
+//               uint32_t eip, cs, eflags, esp, ss; /* Pushed by the processor automatically */
+//            } __attribute__((packed));
+
 #define INT_TIMER 0x00000008
 #define INT_KEYBOARD 0x00000009
 #define INT_GENERAL_PROTECTION_FAULT 0x0000000D
 #define INT_PAGE_FAULT 0x0000000E
 
-void interrupt_handler(struct cpu_statez cpu, uint32_t interrupt_number, uint32_t error_code, uint32_t eip) {
+void interrupt_handler(struct cpu_state cpu) {
   print_log("\n!!! Interrupt\n");
   print_log("interrupt_number: ");
-  print_log_int( interrupt_number,10);
+  print_log_int( cpu.int_no,10);
   print_log("\n");
 
-  print_log("error_code: ");
-  print_log_int( error_code,10);
+  print_log("cpu.err_code: ");
+  print_log_int( cpu.err_code,10);
   print_log("\n");
 
   // print_log("\nStack trace:\n");
@@ -393,7 +400,7 @@ void interrupt_handler(struct cpu_statez cpu, uint32_t interrupt_number, uint32_
   // }
   print_log("\n");
 
-  switch(interrupt_number) {
+  switch(cpu.int_no) {
 
     case(INT_TIMER):{// keyboard_interrupt_handler();
         print_log("TIMER");
@@ -411,33 +418,33 @@ void interrupt_handler(struct cpu_statez cpu, uint32_t interrupt_number, uint32_
           print_log("- Tried to access linear address ");
           print_log_int( cpu.cr2,10);
           print_log("\n");
-          if (error_code & 0b1) {
+          if (cpu.err_code & 0b1) {
             print_log("- Couldn't complete because of page-protection violation\n");
           } else {
             print_log("- Couldn't complete because page was not present\n");
           }
-          if (error_code & 0b10) {
+          if (cpu.err_code & 0b10) {
             print_log("- This was an attempt to WRITE to this address.\n");
           } else {
             print_log("- This was an attempt to READ from this address.\n");
           }
-          if (error_code & 0b100) {
+          if (cpu.err_code & 0b100) {
             print_log("- Memory access came from user.\n");
           } else {
             print_log("- Memory access came from kernel.\n");
           }
-          if (error_code & 0b1000) {
+          if (cpu.err_code & 0b1000) {
             print_log("- caused by reading a 1 in a reserved field.\n");
           }
-          if (error_code & 0b10000) {
+          if (cpu.err_code & 0b10000) {
             print_log("- caused by an instruction fetch.\n");
           }
-          while(1){};
+          // while(1){};
           break;
     }
     default:
       print_log("ERROR: Unabled to handle interrupt: ");
-      print_log_int( interrupt_number,10);
+      print_log_int( cpu.int_no,10);
       print_log("\n");
       break;
   }
