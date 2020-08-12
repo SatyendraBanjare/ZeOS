@@ -418,28 +418,30 @@ void interrupt_handler(struct cpu_state cpu) {
           print_log("- Tried to access linear address ");
           print_log_int( cpu.cr2,10);
           print_log("\n");
-          if (cpu.err_code & 0b1) {
+          if (cpu.err_code & 0x1) {
             print_log("- Couldn't complete because of page-protection violation\n");
           } else {
             print_log("- Couldn't complete because page was not present\n");
           }
-          if (cpu.err_code & 0b10) {
+          if (cpu.err_code & 0x2) {
             print_log("- This was an attempt to WRITE to this address.\n");
           } else {
             print_log("- This was an attempt to READ from this address.\n");
           }
-          if (cpu.err_code & 0b100) {
+          if (cpu.err_code & 0x4) {
             print_log("- Memory access came from user.\n");
           } else {
             print_log("- Memory access came from kernel.\n");
           }
-          if (cpu.err_code & 0b1000) {
+          if (cpu.err_code & 0x08) {
             print_log("- caused by reading a 1 in a reserved field.\n");
           }
-          if (cpu.err_code & 0b10000) {
+          if (cpu.err_code & 0x10) {
             print_log("- caused by an instruction fetch.\n");
           }
-          // while(1){};
+
+          // Cause Triple Fault !
+          while(1){};
           break;
     }
     default:
