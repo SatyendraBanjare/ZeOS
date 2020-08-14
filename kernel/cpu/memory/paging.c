@@ -48,6 +48,7 @@ uint32_t make_page_directory_entry(
   return entry;
 }
 
+// adds page frames to page tables
 uint32_t make_page_table_entry(
   void* page_frame_address,
   bool global,
@@ -76,8 +77,12 @@ uint32_t make_page_table_entry(
 // This does NOT zero out the page
 void* allocate_physical_page() {
   for (uint32_t index = 0; index < BITMAP_SIZE; index++) {
+
+
     if (free_page_bitmap[index] != 0) {
       // There is at least one free page in this chunk
+      
+
       for (uint8_t bit = 0; bit < 32; bit++) {
         if ((free_page_bitmap[index] & (1 << bit)) != 0) {
           uint32_t page_number = index * 32 + bit;
@@ -86,6 +91,8 @@ void* allocate_physical_page() {
           return  page_start;
         }
       }
+
+
     }
   }
 
@@ -158,11 +165,8 @@ void print_page_directory( page_directory_t pd) {
     bool present = entry & 0x1;
 
     if (present) {
-      print_log( "page directory entry ");
-      char entry_no[10];
-	  itoa(i,entry_no,16);
-      // print_uint32( i);
-      print_log(entry_no);
+      print_log( "page directory entry [ page table ] ");
+      print_log_int(i,10);
       print_log( " is present.\n");
     }
   }
@@ -210,10 +214,13 @@ uint32_t initialize_page_allocator(struct kernel_memory_descriptor_t kernel_memo
   multiboot_memory_map_t * memory_map = (multiboot_memory_map_t *) p_to_v(mbinfo->mmap_addr);
   uint32_t num_entries = mbinfo->mmap_length / sizeof(multiboot_memory_map_t);
 
+  print_log_int(num_entries,10); print_log("\n total enteries \n");
+
   for (uint32_t i = 0; i < num_entries; i++) {
-    if (memory_map[i].type == 1) {
+    if( (memory_map[i].type == 1) &&  (memory_map[i].addr > 0)) {
       // Available
       uint32_t first_addr = memory_map[i].addr;
+      print_log_int(first_addr,16); print_log("\n");
       uint32_t one_past_last_addr = first_addr + memory_map[i].len;
       uint32_t first_full_page = page_number(round_up_to_nearest_page_start(first_addr));
       uint32_t one_past_last_full_page = page_number(round_down_to_nearest_page_start(one_past_last_addr));
