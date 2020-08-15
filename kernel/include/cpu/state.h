@@ -22,6 +22,7 @@ struct kernel_memory_descriptor_t {
 
 uint32_t KERNEL_VIRTUAL_BASE;
 
+void * kernel_stack_lowest_address;
 void * PageDirectoryVirtualAddress;
 void * PageDirectoryPhysicalAddress;
 

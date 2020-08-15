@@ -16,7 +16,7 @@
 // #define BITMAP_SIZE 32768
 // Enough room for 512 MB of RAM
 // TODO: Find a more efficient way to initialize page allocator
-#define BITMAP_SIZE 4096
+#define BITMAP_SIZE 4096 // this is equal to nearest 32 multiple ceil {num_free_pages/8}  
 
 uint32_t free_pages;
 uint32_t free_page_bitmap[BITMAP_SIZE];
@@ -85,10 +85,12 @@ void* allocate_physical_page() {
 
       for (uint8_t bit = 0; bit < 32; bit++) {
         if ((free_page_bitmap[index] & (1 << bit)) != 0) {
+
           uint32_t page_number = index * 32 + bit;
           mark_unavailable(page_number);
           void* page_start = (void*) (page_number << PAGE_OFFSET_BITS);
           return  page_start;
+       
         }
       }
 
@@ -183,7 +185,7 @@ uint32_t round_up_to_nearest_page_start(uint32_t address) {
 uint32_t round_down_to_nearest_page_start(uint32_t address) {
   if ((address & 0xFFF) != 0) {
     address &= 0xFFFFF000;
-    address -= 0x00001000;
+    address += 0x00001000;
   }
   return address;
 }
@@ -225,9 +227,19 @@ uint32_t initialize_page_allocator(struct kernel_memory_descriptor_t kernel_memo
       uint32_t first_full_page = page_number(round_up_to_nearest_page_start(first_addr));
       uint32_t one_past_last_full_page = page_number(round_down_to_nearest_page_start(one_past_last_addr));
 
+      print_log("FIRST PAGE : "); print_log_int(first_full_page,10); print_log("\n");
+      print_log("ONE PAST FIRST FULL PAGE : "); print_log_int(one_past_last_full_page,10); print_log("\n");
+
       for(uint32_t i = first_full_page; i < one_past_last_full_page; i++) {
+
+        // Very Important to note that increment automatically happens by 0x1000
+        // Can be cross checked by memory available at 0x100000 =  0x7ee0000.
+        // and hence total pages should be  0x7ee0000/ 0x1000 = 32480.
         mark_free(i);
       }
+
+      print_log("SET PAGES : "); print_log_int(free_pages,10); print_log("\n");
+
     } else {
       // Unavailable
     }

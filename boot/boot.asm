@@ -14,12 +14,12 @@ MAGIC_NUMBER equ 0x1BADB002
 FLAGS        equ (1<<0 | 1 <<1)  
 CHECKSUM     equ -(MAGIC_NUMBER + FLAGS)
 
-KERNEL_STACK_SIZE equ 0x4000      ; size of stack in bytes (1 kilobyte)
+KERNEL_STACK_SIZE equ 0x100000      ; size of stack in bytes (1 MB)
 
 
 global KERNEL_VIRTUAL_BASE
 KERNEL_VIRTUAL_BASE equ 0xC0000000                  ; 3GB
-KERNEL_PAGE_NUMBER equ (KERNEL_VIRTUAL_BASE >> 22)  ; Page directory index of kernel's 4MB PTE.
+KERNEL_PAGE_NUMBER equ (KERNEL_VIRTUAL_BASE >> 22)  ; Page directory index of kernel's 4MB PTE. = 768
 
 section .data
 align 0x1000
@@ -60,8 +60,8 @@ higher_half_loader:
     mov dword [PageDirectoryVirtualAddress], 0
     invlpg [0]
 
-    mov esp, kernel_stack + KERNEL_STACK_SIZE   ; point esp to the start of the
-                                                ; stack (end of memory area)
+    mov esp, kernel_stack_lowest_address + KERNEL_STACK_SIZE   ; point esp to the start of the
+                                                               ; stack (end of memory area)
 
     add ebx, KERNEL_VIRTUAL_BASE ; make the address virtual
     push ebx 
@@ -74,7 +74,8 @@ higher_half_loader:
     call kernel_main 
     hlt
 
+global kernel_stack_lowest_address
 section .bss                        ; Use the 'bss' section for the stack
     align 32                        ; align at 4 bytes for performance reasons
-    kernel_stack:                   ; label points to beginning of memory
+    kernel_stack_lowest_address:    ; label points to beginning of memory
         resb KERNEL_STACK_SIZE      ; reserve stack for the kernel
