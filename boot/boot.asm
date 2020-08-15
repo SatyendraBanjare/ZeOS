@@ -14,6 +14,7 @@ MAGIC_NUMBER equ 0x1BADB002
 FLAGS        equ (1<<0 | 1 <<1)  
 CHECKSUM     equ -(MAGIC_NUMBER + FLAGS)
 
+global KERNEL_STACK_SIZE
 KERNEL_STACK_SIZE equ 0x100000      ; size of stack in bytes (1 MB)
 
 
