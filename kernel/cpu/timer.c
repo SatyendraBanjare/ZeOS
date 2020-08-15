@@ -14,21 +14,23 @@ uint32_t rdtsc()
 
 }
 
-// void printuptime(int input)
-// {
-//     char buffer[11] = "0000000000";
-//     for (int i = 0; i < 10; i++)
-//     {
-//         int temp = input % 10;
-//         buffer[10 - i] = (char)(temp + 0x30);
-//         input /= 10;
-//     }
-//     zprint_time(buffer);
-// }
+void printuptime(int input)
+{
+    char buffer[11] = "0000000000";
+    for (int i = 0; i < 10; i++)
+    {
+        int temp = input % 10;
+        buffer[10 - i] = (char)(temp + 0x30);
+        input /= 10;
+    }
+    zprint_time(buffer);
+}
 
 
 void timer_callback() {
     tick++;
+    printuptime(rdtsc());
+    
 }
 
 void init_timer(uint32_t freq) {
@@ -39,6 +41,8 @@ void init_timer(uint32_t freq) {
     uint32_t divisor = 1193180 / freq;
     uint8_t low  = (uint8_t)(divisor & 0xFF);
     uint8_t high = (uint8_t)( (divisor >> 8) & 0xFF);
+
+    asm volatile("cli");
     /* Send the command */
     outb(0x43, 0x36); /* Command port */
     outb(0x40, low);

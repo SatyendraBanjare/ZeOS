@@ -17,18 +17,6 @@
 
 extern void enable_paging();
 
-void printuptime(int input)
-{
-    char buffer[11] = "0000000000";
-    for (int i = 0; i < 10; i++)
-    {
-        int temp = input % 10;
-        buffer[10 - i] = (char)(temp + 0x30);
-        input /= 10;
-    }
-    zprint_time(buffer);
-}
-
 uint32_t trigger_page_fault() {
   uint32_t* unmapped_address = (uint32_t *) 0x500000; // 5 MB
   return *unmapped_address;
@@ -40,7 +28,7 @@ void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multib
 	// multiboot_info_t *mboot_ptr = (multiboot_info_t *) ebx;
 
 	// Print the multiboot info
-	
+	init_timer(50);
 
 	clear_screen_full();
 
@@ -57,7 +45,7 @@ void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multib
 
 	// Define Paging. 
 
-	init_timer(50);
+	
 
 
 	init_shell();
@@ -90,8 +78,6 @@ void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multib
 	// uint32_t fault = trigger_page_fault();
 
 
-	while(1){
-		printuptime(rdtsc());
-	}
+	while(1){}
 
 }

@@ -11,7 +11,7 @@
 #define PIC_EOI   0x20    /* End-of-interrupt command code */
 
 void pic_init() {
-  outb(PIC1_DATA, 0b11111101); // Only enable keyboard (irc 1)
+  // outb(PIC1_DATA, 0b11111101); // enable all interrupts , uncomment to start only keyboard interrupts
   outb(PIC2_DATA, 0b11111111); // Don't enable any interrupts on slave pic (irc 8-15)
   // enable_hardware_interrupts();
   asm volatile("sti");
