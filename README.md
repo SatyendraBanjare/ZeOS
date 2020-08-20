@@ -8,16 +8,23 @@ Operating system Hobby Project
 - run `make clean` to clean all unnecessary files
 
 ## Progress :
+- [x] Grub Multiboot Log
+  + [x] Memory map info
+  + [x] Module info
+  + [x] Cmdline info
 - [x] GDT setup
 - [x] IDT & ISR setup
-- [ ] Terminal 
+- [x] Terminal 
   + [x] Terminal Scrolling
   + [x] Clear Screen Command (shortcut : ctrl + L)
-  + [ ] Implement delete function for deleting backways
-  + [ ] Implement C-A and C-E (endofline)
+  + [ ] Implement delete function for deleting backways {Not Implementing}
+  + [x] Implement C-A and C-E (endofline) {C-E Not working}
   + [x] Implement arrows. < > done. ^ up arrow prints last command.
 - [x] basic keyboard input
+- [x] Higher Half Kernel
+- [x] Paging
 - [ ] Heap
+- [ ] MultiTasking
 - [ ] InitRD
 - [ ] VFS
   + [ ] Read- Write Capabilities

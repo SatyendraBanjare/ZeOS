@@ -15,7 +15,8 @@ FLAGS        equ (1<<0 | 1 <<1)
 CHECKSUM     equ -(MAGIC_NUMBER + FLAGS)
 
 global KERNEL_STACK_SIZE
-KERNEL_STACK_SIZE equ 0x100000      ; size of stack in bytes (1 MB)
+KERNEL_STACK_SIZE equ 0x100000      ; size of stack in bytes (1 MB) this should be less than 4mb page 
+                                    ; of kernel
 
 
 global KERNEL_VIRTUAL_BASE

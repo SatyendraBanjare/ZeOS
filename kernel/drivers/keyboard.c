@@ -32,9 +32,9 @@ const char sc_ascii_shift[] = { '\0', '\0', '!', '@', '#', '$', '%', '^',
 
 int shift_down = 0;
 int buff_pointer = 0;
+int max_length = 0;
 int max_back =0;
 int ctrl_press=0;
-
 
 void manage_left(){
     if(max_back >0 && buff_pointer >0){
@@ -45,6 +45,29 @@ void manage_left(){
     else{
         return;
     }
+}
+
+void start_of_line(int count){
+
+    while(count >0){
+        if(max_back >0 && buff_pointer >0){
+            zprint_left();
+            buff_pointer --;
+            max_back--;
+        }
+        count--;
+    }
+    zprint_right();
+}
+
+void end_of_line(int count){
+    
+    while(count >0){
+        zprint_right();
+        count--;   
+    }
+    zprint_left();
+    buff_pointer = max_length;
 }
 
 void manage_right(){
@@ -134,8 +157,9 @@ void keyboard_callback() {
         user_input(key_buffer); /* kernel-controlled function */
         
         flush_buffer(key_buffer);
-        buff_pointer    =0;
-        max_back=0;    
+        buff_pointer =0;
+        max_back =0;
+        max_length =0;  
     } else {
 
         char letter;
@@ -153,13 +177,25 @@ void keyboard_callback() {
             buff_pointer =0;
             max_back=0;
             ctrl_press =0;
-        }else{
+        }else if (ctrl_press == 1 && (letter == 'A' || letter == 'a'))
+        {
+            int count = buff_pointer;
+            start_of_line(count);
+            ctrl_press =0;
+        }else if (ctrl_press == 1 && (letter == 'E' || letter == 'e'))
+        {
+            int count = max_length;
+            end_of_line(count);
+            ctrl_press =0;
+        }
+        else{
         /* Remember that zprint only accepts char[] */
         char str[2] = {letter, '\0'};
         // append(key_buffer, letter);
         key_buffer[buff_pointer] = letter;
         buff_pointer++;
         max_back++;
+        max_length = (max_length >=buff_pointer) ? max_length : buff_pointer;
         zprint(str);
     }
     }
