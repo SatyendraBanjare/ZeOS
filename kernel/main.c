@@ -10,6 +10,7 @@
 #include "include/common/helper.h"
 #include "include/multiboot/multiboot_util.h"
 #include "include/cpu/memory/paging.h"
+#include "include/cpu/memory/jpage.h"
 
 #if defined(__linux__)
 #error "You are not using a cross-compiler, you will most certainly run into trouble"
@@ -67,6 +68,8 @@ void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multib
 	print_log("Address of Page Directory : "); print_log_int(pdnum,16); print_log("\n");
 
 	print_page_directory(pd);
+
+	// initialize_paging(kernel_memory, mboot_ptr);
 
 	// // init all different 
 	
