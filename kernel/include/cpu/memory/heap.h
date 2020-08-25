@@ -12,5 +12,6 @@
 #include "../../common/helper.h"
 
 void* malloc(uint32_t bytes);
+void * zmalloc_p(uint32_t bytes, uint32_t* phys);
 
 #endif

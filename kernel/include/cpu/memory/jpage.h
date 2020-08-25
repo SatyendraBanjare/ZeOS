@@ -13,24 +13,20 @@
 #include "../../common/helper.h"
 #include "../../multiboot/multiboot_util.h"
 
-typedef struct page_table_entry
+typedef struct page
 {
-    uint32_t present:1;
-    uint32_t rw:1;
-    uint32_t user:1;
-    uint32_t pwt:1;
-    uint32_t pcd:1;
-    uint32_t accessed:1;
-    uint32_t dirty:1;
-    uint32_t pat:1;
-    uint32_t global:1;
-    uint32_t unused:3;
-    uint32_t frame:20;
-}__attribute__((packed)) page_table_entry_t;
+    u32int present    : 1;   // Page present in memory
+    u32int rw         : 1;   // Read-only if clear, readwrite if set
+    u32int user       : 1;   // Supervisor level only if clear
+    u32int accessed   : 1;   // Has the page been accessed since last refresh?
+    u32int dirty      : 1;   // Has the page been written to since last refresh?
+    u32int unused     : 7;   // Amalgamation of unused and reserved bits
+    u32int frame      : 20;  // Frame address (shifted right 12 bits)
+}__attribute__((packed)) page_t;
  
 typedef struct page_table
 {
-    page_table_entry_t pages[1024]; 
+    page_t pages[1024]; 
 }__attribute__((packed)) page_table_t;
 
 typedef struct page_directory
@@ -46,6 +42,6 @@ typedef struct page_directory
  
 void initialize_paging(struct kernel_memory_descriptor_t kernel_memory, multiboot_info_t* mbinfo);
 
-struct page_table_entry_t* get_page(uint32_t address, struct page_directory_t* page_dir); 
+page_t* get_page(uint32_t address, struct page_directory_t* page_dir);    
 
 #endif
