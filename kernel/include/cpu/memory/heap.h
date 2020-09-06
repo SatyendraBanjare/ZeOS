@@ -11,7 +11,7 @@
 #include "../../terminal/terminal.h"
 #include "../../common/helper.h"
 
-void* malloc(uint32_t bytes);
-void * zmalloc_p(uint32_t bytes, uint32_t* phys);
+void* zmalloc(uint32_t bytes);
+void* zmalloc_p(uint32_t bytes, uint32_t* phys);
 
 #endif
