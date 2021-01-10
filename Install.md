@@ -1,0 +1,3 @@
+- sudo apt-get install qemu-system-x86
+- sudo apt install nasm
+- https://github.com/lordmilko/i686-elf-tools/blob/master/i686-elf-tools.sh for cross-compiler
