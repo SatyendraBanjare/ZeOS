@@ -60,3 +60,12 @@ Using Grub :
 - https://www.dedoimedo.com/computers/grub-2.html
 - https://blog.fpmurphy.com/2010/06/grub2-modules.html
 - https://wiki.osdev.org/Writing_GRUB_Modules
+
+## Explain
+
+write on 
+- explain logs
+- explain functions
+- briefly explain all the assembly instructions used throughout
+- how to make the iso file
+- how file sys is created & implemented
