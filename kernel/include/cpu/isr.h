@@ -272,7 +272,41 @@ void interrupt_handler_255();
 //   uint32_t eax;
 // } __attribute__((packed));
 
-void interrupt_handler(struct cpu_state cpu);
+#define IRQ0 32
+#define IRQ1 33
+#define IRQ2 34
+#define IRQ3 35
+#define IRQ4 36
+#define IRQ5 37
+#define IRQ6 38
+#define IRQ7 39
+#define IRQ8 40
+#define IRQ9 41
+#define IRQ10 42
+#define IRQ11 43
+#define IRQ12 44
+#define IRQ13 45
+#define IRQ14 46
+#define IRQ15 47
 
+void external_interrupt_handler_0();
+void external_interrupt_handler_1();
+void external_interrupt_handler_2();
+void external_interrupt_handler_3();
+void external_interrupt_handler_4();
+void external_interrupt_handler_5();
+void external_interrupt_handler_6();
+void external_interrupt_handler_7();
+void external_interrupt_handler_8();
+void external_interrupt_handler_9();
+void external_interrupt_handler_10();
+void external_interrupt_handler_11();
+void external_interrupt_handler_12();
+void external_interrupt_handler_13();
+void external_interrupt_handler_14();
+void external_interrupt_handler_15();
+
+void interrupt_handler(struct cpu_state cpu);
+void external_interrupt_handler(struct cpu_state cpu);
 
 #endif

@@ -122,7 +122,7 @@ void print_multiboot_info(struct multiboot_info *mboot_ptr){
 		print_log("Got MULTIBOOT_INFO_FRAMEBUFFER_INFO  ");print_log("\n");
 	}
 
-	// if (mboot_ptr->mods_count > 0){print_log(" MMMM module count >0");}
+	if (mboot_ptr->mods_count > 0){print_log(" MMMM module count >0");}
 
 	print_log("\n \n");
 

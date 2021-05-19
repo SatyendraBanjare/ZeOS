@@ -14,7 +14,7 @@
 void interrupt_handler(struct cpu_state cpu) {
   print_log("\n!!! Interrupt\n");
   print_log("interrupt_number: ");
-  print_log_int( cpu.int_no,10);
+  print_log_int( cpu.int_no,16);
   print_log("\n");
 
   print_log("cpu.err_code: ");
@@ -42,8 +42,8 @@ void interrupt_handler(struct cpu_state cpu) {
 
   switch(cpu.int_no) {
 
-    case(INT_TIMER):{// keyboard_interrupt_handler();
-        // print_log("TIMER");
+    case(INT_TIMER):{// timer_interrupt_handler();
+        print_log("TIMER");
         timer_callback();
           break;
     }
@@ -93,3 +93,16 @@ void interrupt_handler(struct cpu_state cpu) {
 
   pic_acknowledge();
 }
+
+// void external_interrupt_handler(struct cpu_state cpu) {
+//     /* After every interrupt we need to send an EOI to the PICs
+//      * or they will not send another interrupt again */
+//     if (cpu.int_no >= 40) outb(0xA0, 0x20); /* slave */
+//     pic_acknowledge();/* master */
+
+//     /* Handle the interrupt in a more modular way */
+//     // if (interrupt_handlers[cpu.int_no] != 0) {
+//     //     isr_t handler = interrupt_handlers[cpu.int_no];
+//     //     handler(r);
+//     // }
+// }

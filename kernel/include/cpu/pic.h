@@ -11,6 +11,6 @@
 
 void pic_init();
 void pic_acknowledge();
-
+static inline void io_wait(void);
 
 #endif

@@ -1,4 +1,5 @@
 extern interrupt_handler ; the C interrupt handler
+extern external_interrupt_handler ; the C external enterrupt handler
 
 global interrupt_handler_0
 interrupt_handler_0:
@@ -1536,6 +1537,103 @@ interrupt_handler_255:
   push    dword 255
   jmp     common_interrupt_handler
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+global external_interrupt_handler_0
+external_interrupt_handler_0:
+  push    dword 0
+  push    dword 32
+  jmp     common_external_interrupt_handler
+
+global external_interrupt_handler_1
+external_interrupt_handler_1:
+  push    dword 1
+  push    dword 33
+  jmp     common_external_interrupt_handler
+
+global external_interrupt_handler_2
+external_interrupt_handler_2:
+  push    dword 2
+  push    dword 34
+  jmp     common_external_interrupt_handler
+
+global external_interrupt_handler_3
+external_interrupt_handler_3:
+  push    dword 3
+  push    dword 35
+  jmp     common_external_interrupt_handler
+
+global external_interrupt_handler_4
+external_interrupt_handler_4:
+  push    dword 4
+  push    dword 36
+  jmp     common_external_interrupt_handler
+
+global external_interrupt_handler_5
+external_interrupt_handler_5:
+  push    dword 5
+  push    dword 37
+  jmp     common_external_interrupt_handler
+
+global external_interrupt_handler_6
+external_interrupt_handler_6:
+  push    dword 6
+  push    dword 38
+  jmp     common_external_interrupt_handler
+
+global external_interrupt_handler_7
+external_interrupt_handler_7:
+  push    dword 7
+  push    dword 39
+  jmp     common_external_interrupt_handler
+
+global external_interrupt_handler_8
+external_interrupt_handler_8:
+  push    dword 8
+  push    dword 40
+  jmp     common_external_interrupt_handler
+
+global external_interrupt_handler_9
+external_interrupt_handler_9:
+  push    dword 9
+  push    dword 41
+  jmp common_external_interrupt_handler
+
+global external_interrupt_handler_10
+external_interrupt_handler_10:
+  push    dword 10
+  push    dword 42
+  jmp     common_external_interrupt_handler
+
+global external_interrupt_handler_11
+external_interrupt_handler_11:
+  push    dword 11
+  push    dword 43
+  jmp     common_external_interrupt_handler
+
+global external_interrupt_handler_12
+external_interrupt_handler_12:
+  push    dword 12
+  push    dword 44
+  jmp     common_external_interrupt_handler
+
+global external_interrupt_handler_13
+external_interrupt_handler_13:
+  push    dword 13
+  push    dword 45
+  jmp     common_external_interrupt_handler
+
+global external_interrupt_handler_14
+external_interrupt_handler_14:
+  push    dword 14
+  push    dword 46
+  jmp     common_external_interrupt_handler
+
+global external_interrupt_handler_15
+external_interrupt_handler_15:
+  push    dword 15
+  push    dword 47
+  jmp     common_external_interrupt_handler
 common_interrupt_handler:               ; the common parts of the generic interrupt handler
   
   ;1. save the registers
@@ -1567,3 +1665,23 @@ common_interrupt_handler:               ; the common parts of the generic interr
     popa
     add esp, 8              ; Cleans up the pushed error code and pushed ISR number
     iret                    ; pops  CS, EIP, EFLAGS, SS, and ESP
+
+common_external_interrupt_handler:
+    pusha 
+    mov ax, ds
+    push eax
+    mov ax, 0x10
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    call interrupt_handler ; Different than the ISR code
+    pop ebx  ; Different than the ISR code
+    mov ds, bx
+    mov es, bx
+    mov fs, bx
+    mov gs, bx
+    popa
+    add esp, 8
+    sti
+    iret 

@@ -1,5 +1,6 @@
 #include "../include/cpu/idt.h"
 #include "../include/cpu/gdt.h"
+#include "../include/cpu/pic.h"
 // Access methods defined in the asm files.
 extern void load_idt(void * IDT_Ptr);
 
@@ -301,6 +302,25 @@ uint32_t interrupt_handler_addresses[] = {
   (uint32_t) interrupt_handler_255,
 };
 
+uint32_t external_interrupt_handler_addresses[] = {
+  (uint32_t) external_interrupt_handler_0,
+  (uint32_t) external_interrupt_handler_1,
+  (uint32_t) external_interrupt_handler_2,
+  (uint32_t) external_interrupt_handler_3,
+  (uint32_t) external_interrupt_handler_4,
+  (uint32_t) external_interrupt_handler_5,
+  (uint32_t) external_interrupt_handler_6,
+  (uint32_t) external_interrupt_handler_7,
+  (uint32_t) external_interrupt_handler_8,
+  (uint32_t) external_interrupt_handler_9,
+  (uint32_t) external_interrupt_handler_10,
+  (uint32_t) external_interrupt_handler_11,
+  (uint32_t) external_interrupt_handler_12,
+  (uint32_t) external_interrupt_handler_13,
+  (uint32_t) external_interrupt_handler_14,
+  (uint32_t) external_interrupt_handler_15,
+};
+
 void init_idt() {
   idt_description_structure.size = sizeof(idt) - 1;
   idt_description_structure.offset = (uint32_t) idt;
@@ -320,6 +340,23 @@ void init_idt() {
     idt[i].type_attr = type_attr;
     idt[i].offset_16_31 = offset_16_31;
   }
+pic_init();
+  // install for IRQs
+  for (int i=0;i<=15;i++){
+    uint32_t external_interrupt_handler_address = external_interrupt_handler_addresses[i];
+    uint16_t offset_0_15 = external_interrupt_handler_address & 0x0000FFFF;
+    uint16_t offset_16_31 = external_interrupt_handler_address >> 16;
+
+    idt[i+32].offset_0_15 = offset_0_15;
+    idt[i+32].selector = selector;
+    idt[i+32].zero = zero;
+    idt[i+32].type_attr = type_attr;
+    idt[i+32].offset_16_31 = offset_16_31;
+  }
 
   load_idt(&idt_description_structure);
 }
+
+// void register_interrupt_handler(uint8_t n, isr_t handler) {
+//     external_interrupt_handler_addresses[n] = handler;
+// }
