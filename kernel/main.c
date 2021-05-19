@@ -28,7 +28,7 @@ void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multib
 	// multiboot_info_t *mboot_ptr = (multiboot_info_t *) ebx;
 
 	// Print the multiboot info
-	init_timer(50);
+	
 
 	clear_screen_full();
 
@@ -40,17 +40,13 @@ void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multib
 
 	init_gdt();
 	init_idt();
-	// isr_install();
-	// irq_install();
 
-	// Define Paging. 
-
+	init_timer(50);
+	pic_init();
 	
-
-
 	init_shell();
 	
-	pic_init();
+	
 
 
 	// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

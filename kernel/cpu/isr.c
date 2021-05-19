@@ -42,13 +42,13 @@ void interrupt_handler(struct cpu_state cpu) {
 
   switch(cpu.int_no) {
 
-    case(INT_TIMER):{// keyboard_interrupt_handler();
-        // print_log("TIMER");
+    case(32):{// Timer interrupt_handler();
+        print_log("TIMER");
         timer_callback();
           break;
     }
 
-    case(INT_KEYBOARD):{// keyboard_interrupt_handler();
+    case(33):{// keyboard_interrupt_handler();
         print_log("KEYBOARD");
         keyboard_callback();
           break;

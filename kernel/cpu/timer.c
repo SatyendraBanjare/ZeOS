@@ -44,7 +44,7 @@ void init_timer(uint32_t freq) {
 
     asm volatile("cli");
     /* Send the command */
-    outb(0x43, 0x36); /* Command port */
+    // outb(0x43, 0x36); /* Command port */
     outb(0x40, low);
     outb(0x40, high);
 }
