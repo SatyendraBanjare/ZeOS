@@ -57,6 +57,8 @@ void interrupt_handler(struct cpu_state cpu) {
           print_log("Interrupt was a page fault. Here's what I know:\n");
           print_log("- Tried to access linear address ");
           print_log_int( cpu.cr2,10);
+          print_log("\n ");
+          print_log_int( cpu.err_code,10);
           print_log("\n");
           if (cpu.err_code & 0x1) {
             print_log("- Couldn't complete because of page-protection violation\n");

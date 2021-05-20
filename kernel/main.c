@@ -18,7 +18,7 @@
 extern void enable_paging();
 
 uint32_t trigger_page_fault() {
-  uint32_t* unmapped_address = (uint32_t *) 0xC0100000; // 5 MB
+  uint32_t* unmapped_address = (uint32_t *) 0x00000000; 
   return *unmapped_address;
 }
 
@@ -51,18 +51,18 @@ void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multib
 
 	// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-	print_log("\nPaging \n \n");
-	uint32_t free_pages = initialize_page_allocator(kernel_memory, mboot_ptr);
+	// print_log("\nPaging \n \n");
+	// uint32_t free_pages = initialize_page_allocator(kernel_memory, mboot_ptr);
 	
-	print_log("Free Pages :"); print_log_int(free_pages,10); print_log(" or "); print_log_int(free_pages/256,10); print_log(" MB");  print_log("\n");
+	// print_log("Free Pages :"); print_log_int(free_pages,10); print_log(" or "); print_log_int(free_pages/256,10); print_log(" MB");  print_log("\n");
 
 
-	page_directory_t pd = initialize_page_directory();
-	print_log("\n \n Initialized Page Directory \n\n");
-	uint32_t pdnum = (uint32_t) pd;
-	print_log("Address of Page Directory : "); print_log_int(pdnum,16); print_log("\n");
+	// page_directory_t pd = initialize_page_directory();
+	// print_log("\n \n Initialized Page Directory \n\n");
+	// uint32_t pdnum = (uint32_t) pd;
+	// print_log("Address of Page Directory : "); print_log_int(pdnum,16); print_log("\n");
 
-	print_page_directory(pd);
+	// print_page_directory(pd);
 
 	// // init all different 
 	

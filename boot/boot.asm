@@ -78,6 +78,6 @@ higher_half_loader:
 
 global kernel_stack_lowest_address
 section .bss                        ; Use the 'bss' section for the stack
-    align 32                        ; align at 4 bytes for performance reasons
+    align 4                        ; align at 4 bytes for performance reasons
     kernel_stack_lowest_address:    ; label points to beginning of memory
         resb KERNEL_STACK_SIZE      ; reserve stack for the kernel
