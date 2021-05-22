@@ -1,0 +1,85 @@
+Current log.txt
+==================
+
+kernel Memory Address : 
+--------------- 
+kernel Phy end : 0x20c968
+kernel Phy start : 0x100000
+kernel virt end : 0xc020c968
+kernel virt start : 0xc0100000
+
+
+Multiboot Info : 
+--------------- 
+flags : 0x7ef
+mem_lower (KB) : 639
+mem_upper (KB) : 129920
+boot_device : 0xe0ffffff
+cmdline :/boot/zeos.bin 
+mods_count : 1
+mods_addr : 0xc00216c0
+
+ 
+Flags Set :
+ 
+MULTIBOOT_INFO_MEMORY  
+MULTIBOOT_INFO_BOOTDEV 
+MULTIBOOT_INFO_CMDLINE  
+Got MULTIBOOT_INFO_MODS  
+Got MULTIBOOT_INFO_ELF_SHDR  
+Got MULTIBOOT_INFO_MEM_MAP  
+Got MULTIBOOT_INFO_DRIVE_INFO  
+Got MULTIBOOT_INFO_CONFIG_TABLE  
+Got MULTIBOOT_INFO_BOOT_LOADER_NAME  
+Got MULTIBOOT_INFO_APM_TABLE  
+
+ 
+
+memory map:
+address: 0x0
+length: 0x9fc00
+size: 0x14
+type:  1 MULTIBOOT_MEMORY_AVAILABLE
+
+address: 0x9fc00
+length: 0x400
+size: 0x14
+type:  2 MULTIBOOT_MEMORY_RESERVED
+
+address: 0xf0000
+length: 0x10000
+size: 0x14
+type:  2 MULTIBOOT_MEMORY_RESERVED
+
+address: 0x100000
+length: 0x7ee0000
+size: 0x14
+type:  1 MULTIBOOT_MEMORY_AVAILABLE
+
+address: 0x7fe0000
+length: 0x20000
+size: 0x14
+type:  2 MULTIBOOT_MEMORY_RESERVED
+
+address: 0xfffc0000
+length: 0x40000
+size: 0x14
+type:  2 MULTIBOOT_MEMORY_RESERVED
+
+GRUB Modules : /module/initrd.img
+Mod Start (Virtual) : 0xc0211000
+Mod End (Virtual) : 0xc021232e
+
+============================
+Interrupts ::
+============================
+
+TIMER
+!!! Interrupt
+interrupt_number: 32
+cpu.err_code: 0
+
+KEYBOARD
+!!! Interrupt
+interrupt_number: 33
+cpu.err_code: 0
