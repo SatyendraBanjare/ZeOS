@@ -25,6 +25,10 @@ void print_memory_map(struct multiboot_info* info) {
     print_log_int( memory_map[i].len,16);
     print_log( "\n");
 
+	print_log( "size: ");
+    print_log("0x");print_log_int( memory_map[i].size,16);
+    print_log( "\n");
+
     print_log( "type: ");
     print_mem_type( memory_map[i].type);
     print_log( "\n");
