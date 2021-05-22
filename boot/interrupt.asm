@@ -1567,3 +1567,12 @@ common_interrupt_handler:               ; the common parts of the generic interr
     popa
     add esp, 8              ; Cleans up the pushed error code and pushed ISR number
     iret                    ; pops  CS, EIP, EFLAGS, SS, and ESP
+
+global interrupt
+; interrupt - Generates a software interrupt
+interrupt:
+  push ebp ; make the caller show up in the stack trace
+  mov ebp, esp
+  int 50
+  pop ebp
+  ret

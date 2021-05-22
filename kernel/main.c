@@ -71,9 +71,10 @@ void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multib
 	// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 	// Working Page Fault uncomment to see in action !!
-	uint32_t fault = trigger_page_fault();
-	print_log("FAULT ADDR:");
-	print_log_int(fault,16);
+	// uint32_t fault = trigger_page_fault();
+	print_log("INTERRUPT ISSUE ADDR:");
+	interrupt();
+	// print_log_int(fault,16);
 	while(1){}
 
 }

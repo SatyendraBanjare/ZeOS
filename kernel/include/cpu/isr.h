@@ -260,7 +260,7 @@ void interrupt_handler_253();
 void interrupt_handler_254();
 void interrupt_handler_255();
 
-
+void interrupt();
 // struct cpu_statez {
 //   uint32_t cr2;
 //   uint32_t ebp;
