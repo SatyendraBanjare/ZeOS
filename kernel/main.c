@@ -24,31 +24,34 @@ uint32_t trigger_page_fault() {
 
 void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multiboot_info_t *mboot_ptr) {
 
-	// Get the multiboot pointer
-	// multiboot_info_t *mboot_ptr = (multiboot_info_t *) ebx;
+	// Print Kernel mempry addresses
+	print_log("kernel Memory Address : \n--------------- \n");
+	print_log("kernel Phy end : 0x"); print_log_int(kernel_memory.kernel_physical_end,16);print_log("\n");
+	print_log("kernel Phy start : 0x"); print_log_int(kernel_memory.kernel_physical_start,16);print_log("\n");
+	print_log("kernel virt end : 0x"); print_log_int(kernel_memory.kernel_virtual_end,16);print_log("\n");
+	print_log("kernel virt start : 0x"); print_log_int(kernel_memory.kernel_virtual_start,16);print_log("\n");
+	print_log("\n\n");
 
 	// Print the multiboot info
+	print_log("Multiboot Info : \n--------------- \n");
+	print_multiboot_info( mboot_ptr);
+	print_log("\n\n");
 	
-
-	clear_screen_full();
-
-	// Initialize the gdt & idt.
-
+	// init serial IO 
 	serial_init();
 
-	print_multiboot_info( mboot_ptr);
-
+	// Initialize the gdt & idt.
 	init_gdt();
 	init_idt();
 
+	// init timer & pic
 	init_timer(50);
 	pic_init();
 	
+	// clear screen
+	clear_screen_full();
 	init_shell();
 	
-	
-
-
 	// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 	// print_log("\nPaging \n \n");
@@ -56,6 +59,7 @@ void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multib
 	
 	// print_log("Free Pages :"); print_log_int(free_pages,10); print_log(" or "); print_log_int(free_pages/256,10); print_log(" MB");  print_log("\n");
 
+	
 
 	// page_directory_t pd = initialize_page_directory();
 	// print_log("\n \n Initialized Page Directory \n\n");
@@ -72,8 +76,8 @@ void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multib
 
 	// Working Page Fault uncomment to see in action !!
 	// uint32_t fault = trigger_page_fault();
-	print_log("INTERRUPT ISSUE ADDR:");
-	interrupt();
+	// print_log("INTERRUPT ISSUE ADDR:");
+	// interrupt();
 	// print_log_int(fault,16);
 	while(1){}
 
