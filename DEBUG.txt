@@ -1,0 +1,13 @@
+DEBUG.txt
+==========
+
+getting invalid access errors, I am guessing I am doing something wrong while 
+mapping pages and page directory
+
+Invalid access at addr 0xFEBB0000, size 1, region '(null)', reason: rejected
+Invalid access at addr 0x0, size 1, region '(null)', reason: rejected
+.
+.
+.
+Invalid access at addr 0xFEBB00FF, size 1, region '(null)', reason: rejected
+Invalid access at addr 0xFF, size 1, region '(null)', reason: rejected
