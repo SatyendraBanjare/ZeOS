@@ -56,11 +56,13 @@ zeos.iso: zeos.bin
 #     grub-mkrescue -o zeos.iso isodir
 
 run: zeos.iso
-	qemu-system-i386 -cdrom zeos.iso -serial file:log/log.txt
+	qemu-system-i386 -m size=4096 -cdrom zeos.iso -serial file:log/log.txt
 
-debug:
-	qemu-system-i386 -cdrom zeos.iso -d guest_errors,int &
-	${GDB} -ex "target remote localhost:1234"
+debug: zeos.iso #guest_errors,int,mmu,page,pcall
+	qemu-system-i386 -m size=4096 -cdrom zeos.iso \
+	-d guest_errors \
+	-D debug.txt \
+	-serial file:log/log.txt
 
 clean:
 	rm -rf isodir/
