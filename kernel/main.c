@@ -22,9 +22,9 @@ uint32_t trigger_page_fault() {
   return *unmapped_address;
 }
 
-void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multiboot_info_t *mboot_ptr) {
+void kernel_main(uint32_t mbaddr, uint32_t magic_number,struct kernel_memory_descriptor_t kernel_memory, struct  multiboot_info_t *mboot_ptr,uint32_t kernel_pdt_vaddr, uint32_t kernel_pt_vaddr) {
 
-	// Print Kernel mempry addresses
+	// Print Kernel memory addresses
 	print_log("kernel Memory Address : \n--------------- \n");
 	print_log("kernel Phy end : 0x"); print_log_int(kernel_memory.kernel_physical_end,16);print_log("\n");
 	print_log("kernel Phy start : 0x"); print_log_int(kernel_memory.kernel_physical_start,16);print_log("\n");
@@ -32,11 +32,27 @@ void kernel_main(struct kernel_memory_descriptor_t kernel_memory, struct  multib
 	print_log("kernel virt start : 0x"); print_log_int(kernel_memory.kernel_virtual_start,16);print_log("\n");
 	print_log("\n\n");
 
+	// Print Page Directory & page table memory addresses
+	print_log("Page Directory & page table Memory Address : \n--------------- \n");
+	print_log("PageTable : 0x"); print_log_int(kernel_pt_vaddr,16);print_log("\n");
+	print_log("PageDirectory : 0x"); print_log_int(kernel_pdt_vaddr,16);print_log("\n");
+	print_log("\n\n");
+	
+	// Print grub magic info
+	print_log("grub magic : \n--------------- \n");
+	print_log("Multiboot Address : 0x"); print_log_int(mbaddr,16);print_log("\n");
+	print_log("magic Number : 0x"); print_log_int(magic_number,16);print_log("\n");
+	print_log("\n\n");
+
 	// Print the multiboot info
 	print_log("Multiboot Info : \n--------------- \n");
 	print_multiboot_info( mboot_ptr);
 	print_log("\n\n");
-	
+
+	if (magic_number != MULTIBOOT_BOOTLOADER_MAGIC) {
+        print_log("ERROR: magic number is wrong!\n");
+    }
+
 	// init serial IO 
 	serial_init();
 
