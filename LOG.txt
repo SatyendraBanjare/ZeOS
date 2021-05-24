@@ -9,6 +9,23 @@ kernel virt end : 0xc020c968
 kernel virt start : 0xc0100000
 
 
+kernel Memory Address : 
+--------------- 
+kernel Phy end : 0x20e988
+kernel Phy start : 0x100000
+kernel virt end : 0xc020e988
+kernel virt start : 0xc0100000
+
+Page Directory & Page table Memory gitAddress : 
+--------------- 
+PageTable : 0xc0107000
+PageDirectory : 0xc0108000
+
+grub magic : 
+--------------- 
+Multiboot Address : 0x2c8a0
+magic Number : 0x2badb002
+
 Multiboot Info : 
 --------------- 
 flags : 0x7ef
