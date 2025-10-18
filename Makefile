@@ -1,14 +1,13 @@
-CC = ~/build-i686-elf/linux/output/bin/i686-elf-gcc
+CC = /opt/homebrew/bin/i686-elf-gcc
 AS= nasm
 
-CFLAGS = -I/kernel/include/ -std=gnu99 -ffreestanding -O2 -Wall -Wextra -m32 -march=i386  -fPIC -fno-pie -fno-exceptions
+CFLAGS = -I/kernel/include/ -std=gnu99 -ffreestanding -O2 -Wall -Wextra -m32 -march=i386  -fPIC -fno-pie -fno-exceptions -fpermissive -fcommon 
 
 C_DIRS = kernel \
 		 kernel/common \
 		 kernel/cpu \
 		 kernel/drivers \
 		 kernel/fs \
-		 kernel/libc \
 		 kernel/terminal
 
 C_SOURCES = $(shell find $(C_DIRS) -type f -name "*.c" )
