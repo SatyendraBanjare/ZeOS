@@ -26,9 +26,12 @@ Operating system Hobby Project
 - [ ] Heap
 - [ ] MultiTasking
 - [ ] InitRD
-- [ ] VFS
-  + [ ] Read- Write Capabilities
-  + [ ] Directory Traversal ??
+- [x] VFS
+  + [x] Read- Write Capabilities
+  + [x] Directory Traversal
+  + [x] File Creation/Deletion
+  + [x] Directory Creation/Deletion
+  + [x] Shell Integration (ls, mkdir, touch, rm, cd, pwd, cat, echo)
 - [ ] Scheduling
 - [ ] User_Mode
 - [ ] PCI ??

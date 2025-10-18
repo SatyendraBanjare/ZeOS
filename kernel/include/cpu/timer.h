@@ -9,6 +9,6 @@
 
 void init_timer(uint32_t freq);
 void timer_callback();
-// uint32_t rdtsc();
+uint32_t rdtsc();
 
 #endif
