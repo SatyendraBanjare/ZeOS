@@ -2,6 +2,7 @@
 
 #define BACKSPACE			0x0E
 #define ENTER     			0x1C
+#define DELETE              0x53 
 #define ARROW_UP			0x48
 #define	ARROW_DOWN			0x50
 #define	ARROW_LEFT			0x4B
@@ -44,6 +45,31 @@ void manage_left(){
     }
     else{
         return;
+    }
+}
+
+void manage_delete(){
+    if(buff_pointer < max_length){
+        // Shift all characters to the left from current position
+        for(int i = buff_pointer; i < max_length - 1; i++){
+            key_buffer[i] = key_buffer[i + 1];
+        }
+        // Clear the last character
+        key_buffer[max_length - 1] = '\0';
+        max_length--;
+        
+        // Update display - print remaining characters and clear the last one
+        int saved_pos = buff_pointer;
+        for(int i = buff_pointer; i < max_length; i++){
+            char str[2] = {key_buffer[i], '\0'};
+            zprint(str);
+        }
+        zprint(" "); // Clear the last character on screen
+        
+        // Move cursor back to original position
+        for(int i = max_length; i >= saved_pos; i--){
+            zprint_left();
+        }
     }
 }
 
@@ -207,6 +233,8 @@ void keyboard_callback() {
                 zprint(kb_c);
                 strcpy_i(kb_c);
                 buff_pointer = strlen(kb_c);
+                max_back = buff_pointer;
+                max_length = buff_pointer;
                 }
             if (scan_code_2 == ARROW_LEFT)
             {manage_left();}
@@ -214,6 +242,8 @@ void keyboard_callback() {
             {manage_right();}
             if (scan_code_2 == ARROW_DOWN)
             {zprint("DOWN");}
+            if (scan_code_2 == DELETE)
+            {manage_delete();}
     }
 
 
