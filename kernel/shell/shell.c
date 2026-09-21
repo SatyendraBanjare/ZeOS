@@ -157,6 +157,48 @@ void init_shell(){
     clear_screen(get_alias());
 }
 
+/* "  label : <value> bytes (<kb> KB)" */
+static void print_mem_line(char *label, uint32_t bytes){
+    char num[16];
+    zprint(label);
+    int_to_ascii((int)bytes, num);
+    zprint(num);
+    zprint(" bytes (");
+    int_to_ascii((int)(bytes / 1024), num);
+    zprint(num);
+    zprint(" KB)\n");
+}
+
+static void print_mem_count(char *label, uint32_t n){
+    char num[16];
+    zprint(label);
+    int_to_ascii((int)n, num);
+    zprint(num);
+    zprint("\n");
+}
+
+/* mem - show kernel heap and stack usage */
+static void show_memory_usage(){
+    heap_stats_t st;
+    heap_get_stats(&st);
+
+    uint32_t stack_top = (uint32_t)(uintptr_t)&kernel_stack_lowest_address + 0x100000;
+    uint32_t esp = (uint32_t)(uintptr_t)get_current_stack_pointer();
+
+    zprint("Kernel heap:\n");
+    print_mem_line("  in use        : ", st.used_bytes);
+    print_mem_line("  free (reuse)  : ", st.free_bytes);
+    print_mem_line("  block headers : ", st.overhead_bytes);
+    print_mem_line("  heap size     : ", st.heap_end - st.heap_start);
+    print_mem_line("  can still grow: ", st.heap_limit > st.heap_end ? st.heap_limit - st.heap_end : 0);
+    print_mem_line("  largest free  : ", st.largest_free);
+    print_mem_count("  blocks used   : ", st.used_blocks);
+    print_mem_count("  blocks free   : ", st.free_blocks);
+    zprint("Kernel stack:\n");
+    print_mem_line("  in use        : ", stack_top > esp ? stack_top - esp : 0);
+    print_mem_line("  total         : ", 0x100000);
+}
+
 static int prompt_printed = 0;   // set when a command already drew the prompt (clear)
 
 void manage_input(char *input){
@@ -172,6 +214,8 @@ void manage_input(char *input){
     } else if (strcmp (input, "clear") == 0){
         clear_screen(get_alias());
         prompt_printed = 1;
+    } else if (strcmp (input, "mem") == 0){
+        show_memory_usage();
     } else if (strcmp (input, "help") == 0){
         zprint("Available commands:\n");
         zprint("  ls [path]       - list directory contents\n");
@@ -183,6 +227,7 @@ void manage_input(char *input){
         zprint("  cat <file>      - display file contents\n");
         zprint("  echo <text>     - display text (use > file to redirect)\n");
         zprint("  alias           - change user alias\n");
+        zprint("  mem             - show kernel heap and stack usage\n");
         zprint("  time            - show system time\n");
         zprint("  delay           - test delay function\n");
         zprint("  clear           - clear screen\n");

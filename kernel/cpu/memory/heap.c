@@ -186,3 +186,29 @@ uint32_t heap_used_bytes(void) {
 	}
 	return used;
 }
+
+void heap_get_stats(heap_stats_t *st) {
+	if (!heap_start) heap_init();
+
+	st->heap_start = (uint32_t)(uintptr_t)heap_start;
+	st->heap_end = (uint32_t)(uintptr_t)heap_brk;
+	st->heap_limit = (uint32_t)(uintptr_t)((uint8_t *)get_current_stack_pointer() - HEAP_STACK_GUARD);
+	st->used_bytes = 0;
+	st->free_bytes = 0;
+	st->overhead_bytes = 0;
+	st->used_blocks = 0;
+	st->free_blocks = 0;
+	st->largest_free = 0;
+
+	for (heap_block_t *b = heap_head; b; b = b->next) {
+		st->overhead_bytes += HEADER_SIZE;
+		if (b->is_free) {
+			st->free_bytes += b->size;
+			st->free_blocks++;
+			if (b->size > st->largest_free) st->largest_free = b->size;
+		} else {
+			st->used_bytes += b->size;
+			st->used_blocks++;
+		}
+	}
+}
