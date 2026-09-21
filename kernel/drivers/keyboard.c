@@ -137,20 +137,40 @@ void strcpy_i(char kb[100]){
 
 }
 
-void keyboard_callback() {
-    /* The PIC leaves us the scancode in port 0x60 */
-    int scancode = inb(0x60);
-    int temp_scancode = inb(0x60);
-    // int temp_scancode_2 = inb(0x60);
+static int extended_key = 0;   /* previous byte was the 0xE0 prefix */
 
-    // int sss = temp_scancode_2;
-    //managing control key
-    // if((sss&0x80)){
-    //      sss &= 0x7F;
-    //     if(sss == 0x1d )
-    //        { zprint("cRR"); ctrl_press=!ctrl_press;}
-    //     return;
-    // }
+/* Second byte of an extended (0xE0-prefixed) key press */
+static void handle_extended_key(int code){
+    if (code == ARROW_UP && max_length == 0){
+        zprint(kb_c);
+        strcpy_i(kb_c);
+        buff_pointer = strlen(kb_c);
+        max_length = buff_pointer;
+    } else if (code == ARROW_LEFT){
+        manage_left();
+    } else if (code == ARROW_RIGHT){
+        manage_right();
+    } else if (code == ARROW_DOWN){
+        zprint("DOWN");
+    } else if (code == DELETE){
+        manage_delete();
+    }
+}
+
+void keyboard_callback() {
+    /* The PIC leaves us one scancode byte in port 0x60; read it exactly once */
+    int temp_scancode = inb(0x60);
+
+    /* Extended keys arrive as 0xE0 followed by the key code (release: code|0x80) */
+    if (temp_scancode == 0xE0){
+        extended_key = 1;
+        return;
+    }
+    if (extended_key){
+        extended_key = 0;
+        if (!(temp_scancode & 0x80)) handle_extended_key(temp_scancode);
+        return;
+    }
 
     // Control key
     if(temp_scancode == 0x1d )
@@ -164,6 +184,8 @@ void keyboard_callback() {
          temp_scancode &= 0x7F;
         if(temp_scancode == 0x2a || temp_scancode == 0x36)
            { shift_down=0;}
+        if(temp_scancode == 0x1d)
+           { ctrl_press=0;}
         return;
     }
     
@@ -222,25 +244,6 @@ void keyboard_callback() {
     }
     }
     }
-
-    if (scancode == 0xE0){
-            uint8_t scan_code_2 = inb(0x60);
-            if (scan_code_2 == ARROW_UP) if(max_length == 0){
-                zprint(kb_c);
-                strcpy_i(kb_c);
-                buff_pointer = strlen(kb_c);
-                max_length = buff_pointer;
-                }
-            if (scan_code_2 == ARROW_LEFT)
-            {manage_left();}
-            if (scan_code_2 == ARROW_RIGHT)
-            {manage_right();}
-            if (scan_code_2 == ARROW_DOWN)
-            {zprint("DOWN");}
-            if (scan_code_2 == DELETE)
-            {manage_delete();}
-    }
-
 
     // (void)(state);
 

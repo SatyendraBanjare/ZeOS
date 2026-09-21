@@ -120,15 +120,13 @@ void vfs_destroy_node(vfs_node_t* node) {
     } else {
         // Free file data if allocated
         if (node->data.file.data) {
-            // Note: In a real implementation, you'd want a proper free() function
-            // For now, we'll just set it to NULL
+            free(node->data.file.data);
             node->data.file.data = NULL;
         }
     }
     
     // Free the node itself
-    // Note: In a real implementation, you'd call free(node)
-    // For now, we'll just set it to NULL in the caller
+    free(node);
 }
 
 /**
@@ -277,11 +275,11 @@ void vfs_free_path_components(char** components, uint32_t count) {
     
     for (uint32_t i = 0; i < count; i++) {
         if (components[i]) {
-            // Note: In a real implementation, call free(components[i])
+            free(components[i]);
             components[i] = NULL;
         }
     }
-    // Note: In a real implementation, call free(components)
+    free(components);
 }
 
 /**
@@ -611,13 +609,9 @@ int vfs_write(int fd, const void* buffer, uint32_t size) {
             new_allocated_size = MAX_FILE_SIZE;
         }
         
-        void* new_data = malloc(new_allocated_size);
+        void* new_data = realloc(node->data.file.data, new_allocated_size);
         if (!new_data) {
             return VFS_ERROR_NO_MEM;
-        }
-        
-        if (node->data.file.data && node->data.file.size > 0) {
-            memory_copy((uint8_t*)node->data.file.data, (uint8_t*)new_data, node->data.file.size);
         }
         
         node->data.file.data = new_data;
@@ -738,6 +732,11 @@ int vfs_delete_directory(const char* path) {
     if (!parent) {
         return VFS_ERROR_INVALID; // Can't delete root
     }
+
+    // Don't free the directory we're standing in (or one of its ancestors)
+    for (vfs_node_t* n = vfs_state.current_directory; n; n = n->data.directory.parent) {
+        if (n == node) return VFS_ERROR_NO_PERM;
+    }
     
     return vfs_remove_child(parent, node->data.directory.name);
 }
@@ -818,6 +817,7 @@ void vfs_shell_ls(const char* path) {
     
     if (count == 0) {
         zprint("(empty directory)\n");
+        free(entries);
         return;
     }
     
@@ -825,10 +825,10 @@ void vfs_shell_ls(const char* path) {
         if (entries[i]) {
             zprint(entries[i]);
             zprint("\n");
-            // Note: In a real implementation, free(entries[i])
+            free(entries[i]);
         }
     }
-    // Note: In a real implementation, free(entries)
+    free(entries);
 }
 
 /**

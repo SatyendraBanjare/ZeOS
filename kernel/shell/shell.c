@@ -31,8 +31,38 @@ void print_header(){
 	zprint_footer("                               ZEOS Operating System !!                               ");
 }
 
+/* Top bar: "CURRENT DIRECTORY : <name>" padded to the "|  Up Time:" column */
 void print_footer(){
-	zprint_header("CURRENT DIRECTORY : /DEV/                             |  Up Time:  ");
+	char line[80];
+	const char *label = "CURRENT DIRECTORY : ";
+	const char *tail = "|  Up Time:  ";
+	const int name_col = 20;     // strlen(label)
+	const int tail_col = 54;     // column where the '|' separator starts
+	int pos = 0;
+
+	// Directory name = last component of the current path ("/" for root)
+	const char *path = vfs_get_current_directory();
+	const char *name = "/";
+	int name_len = 1;
+	if (path && path[0]) {
+		int end = strlen((char*)path);
+		while (end > 1 && path[end - 1] == '/') end--;
+		int start = end;
+		while (start > 0 && path[start - 1] != '/') start--;
+		if (end > start) {
+			name = path + start;
+			name_len = end - start;
+		}
+	}
+	if (name_len > tail_col - name_col - 1) name_len = tail_col - name_col - 1;
+
+	for (int i = 0; label[i]; i++) line[pos++] = label[i];
+	for (int i = 0; i < name_len; i++) line[pos++] = name[i];
+	while (pos < tail_col) line[pos++] = ' ';
+	for (int i = 0; tail[i]; i++) line[pos++] = tail[i];
+	line[pos] = '\0';
+
+	zprint_header(line);
 }
 
 void print_welcome_message(){
@@ -123,8 +153,11 @@ void init_shell(){
         zprint("Sample directories and files created\n");
     }
     
+    print_footer();
     clear_screen(get_alias());
 }
+
+static int prompt_printed = 0;   // set when a command already drew the prompt (clear)
 
 void manage_input(char *input){
     // Trim whitespace from input
@@ -137,7 +170,8 @@ void manage_input(char *input){
         zprint("Stopping the CPU. Bye!\n");
         asm volatile("hlt");
     } else if (strcmp (input, "clear") == 0){
-        clear_screen();
+        clear_screen(get_alias());
+        prompt_printed = 1;
     } else if (strcmp (input, "help") == 0){
         zprint("Available commands:\n");
         zprint("  ls [path]       - list directory contents\n");
@@ -177,7 +211,7 @@ void manage_input(char *input){
         zprint("Unknown command. Type 'help' for available commands.\n");
     }
     
-    zprint("\n");
+    if (!prompt_printed) zprint("\n");
 }
 
 
@@ -329,6 +363,7 @@ void user_input(char *input) {
         } else {
             vfs_shell_cd("/"); // Go to root if no path
         }
+        print_footer(); // refresh the directory name in the top bar
     } else if (n >= 0 && strcmp(arr[0], "pwd") == 0) {
         vfs_shell_pwd();
     } else if (n >= 1 && strcmp(arr[0], "cat") == 0) {
@@ -345,8 +380,11 @@ void user_input(char *input) {
     }
 
     // Print new prompt
-    zprint_new_line(get_alias());
-    zprint_new_line("> ");
+    if (!prompt_printed) {
+        zprint_new_line(get_alias());
+        zprint_new_line("> ");
+    }
+    prompt_printed = 0;
 }
 
 

@@ -25,7 +25,7 @@
 #define FOOTER_COLOR    0x1f
 
 /* Public kernel API */
-void clear_screen();
+void clear_screen(char *alias);
 void zprint_at(char *message, int col, int row, int color);
 void zprint(char *message);
 void zprint_backspace();
