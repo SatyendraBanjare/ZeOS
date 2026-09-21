@@ -32,73 +32,85 @@ const char sc_ascii_shift[] = { '\0', '\0', '!', '@', '#', '$', '%', '^',
         'B', 'N', 'M', '<', '>', '?', '\0', '\0', '\0', ' '};
 
 int shift_down = 0;
-int buff_pointer = 0;
-int max_length = 0;
-int max_back =0;
+int buff_pointer = 0;   /* cursor position inside key_buffer */
+int max_length = 0;     /* number of characters in key_buffer */
 int ctrl_press=0;
 
-void manage_left(){
-    if(max_back >0 && buff_pointer >0){
+/* Print key_buffer[buff_pointer..max_length) followed by `blanks` spaces, then
+ * put the screen cursor back at buff_pointer. */
+static void redraw_tail(int blanks){
+    char str[2] = {'\0', '\0'};
+    for(int i = buff_pointer; i < max_length; i++){
+        str[0] = key_buffer[i];
+        zprint(str);
+    }
+    for(int i = 0; i < blanks; i++){
+        zprint(" ");
+    }
+    for(int i = 0; i < (max_length - buff_pointer) + blanks; i++){
         zprint_left();
-    buff_pointer --;
-    max_back--;
     }
-    else{
-        return;
+}
+
+static void insert_char(char c){
+    if(max_length >= 99) return;
+    for(int i = max_length; i > buff_pointer; i--){
+        key_buffer[i] = key_buffer[i - 1];
     }
+    key_buffer[buff_pointer] = c;
+    max_length++;
+    buff_pointer++;
+    key_buffer[max_length] = '\0';
+
+    char str[2] = {c, '\0'};
+    zprint(str);
+    redraw_tail(0);
+}
+
+static void delete_before_cursor(){
+    if(buff_pointer == 0) return;
+    for(int i = buff_pointer - 1; i < max_length - 1; i++){
+        key_buffer[i] = key_buffer[i + 1];
+    }
+    max_length--;
+    buff_pointer--;
+    key_buffer[max_length] = '\0';
+
+    zprint_left();
+    redraw_tail(1);
 }
 
 void manage_delete(){
-    if(buff_pointer < max_length){
-        // Shift all characters to the left from current position
-        for(int i = buff_pointer; i < max_length - 1; i++){
-            key_buffer[i] = key_buffer[i + 1];
-        }
-        // Clear the last character
-        key_buffer[max_length - 1] = '\0';
-        max_length--;
-        
-        // Update display - print remaining characters and clear the last one
-        int saved_pos = buff_pointer;
-        for(int i = buff_pointer; i < max_length; i++){
-            char str[2] = {key_buffer[i], '\0'};
-            zprint(str);
-        }
-        zprint(" "); // Clear the last character on screen
-        
-        // Move cursor back to original position
-        for(int i = max_length; i >= saved_pos; i--){
-            zprint_left();
-        }
+    if(buff_pointer >= max_length) return;
+    for(int i = buff_pointer; i < max_length - 1; i++){
+        key_buffer[i] = key_buffer[i + 1];
     }
+    max_length--;
+    key_buffer[max_length] = '\0';
+
+    redraw_tail(1);
 }
 
-void start_of_line(int count){
-
-    while(count >0){
-        if(max_back >0 && buff_pointer >0){
-            zprint_left();
-            buff_pointer --;
-            max_back--;
-        }
-        count--;
+void manage_left(){
+    if(buff_pointer > 0){
+        zprint_left();
+        buff_pointer--;
     }
-    zprint_right();
-}
-
-void end_of_line(int count){
-    
-    while(count >0){
-        zprint_right();
-        count--;   
-    }
-    zprint_left();
-    buff_pointer = max_length;
 }
 
 void manage_right(){
-    zprint_right();
-    buff_pointer ++;
+    if(buff_pointer < max_length){
+        zprint_right();
+        buff_pointer++;
+    }
+}
+
+void start_of_line(){
+    while(buff_pointer > 0) manage_left();
+}
+
+void end_of_line(){
+    while(buff_pointer < max_length) manage_right();
 }
 
 void flush_buffer(char kb[100]){
@@ -169,23 +181,16 @@ void keyboard_callback() {
 
     if (temp_scancode <= SC_MAX) {
     if (temp_scancode == BACKSPACE) {
-        if(max_back >0){
-            max_back--;
-            buff_pointer--;
-            key_buffer[buff_pointer]='\0';
-        
-        zprint_backspace();
-    }
+        delete_before_cursor();
     } else if (temp_scancode == ENTER) {
+        end_of_line();
         zprint("\n");
-        // zprint(key_buffer);
         strcpy_h(key_buffer);
         user_input(key_buffer); /* kernel-controlled function */
         
         flush_buffer(key_buffer);
         buff_pointer =0;
-        max_back =0;
-        max_length =0;  
+        max_length =0;
     } else {
 
         char letter;
@@ -201,39 +206,29 @@ void keyboard_callback() {
             clear_screen(get_alias());
             flush_buffer(key_buffer);
             buff_pointer =0;
-            max_back=0;
+            max_length =0;
             ctrl_press =0;
         }else if (ctrl_press == 1 && (letter == 'A' || letter == 'a'))
         {
-            int count = buff_pointer;
-            start_of_line(count);
+            start_of_line();
             ctrl_press =0;
         }else if (ctrl_press == 1 && (letter == 'E' || letter == 'e'))
         {
-            int count = max_length;
-            end_of_line(count);
+            end_of_line();
             ctrl_press =0;
         }
         else{
-        /* Remember that zprint only accepts char[] */
-        char str[2] = {letter, '\0'};
-        // append(key_buffer, letter);
-        key_buffer[buff_pointer] = letter;
-        buff_pointer++;
-        max_back++;
-        max_length = (max_length >=buff_pointer) ? max_length : buff_pointer;
-        zprint(str);
+        if (letter != '\0') insert_char(letter);
     }
     }
     }
 
     if (scancode == 0xE0){
             uint8_t scan_code_2 = inb(0x60);
-            if (scan_code_2 == ARROW_UP) if(max_back == 0){
+            if (scan_code_2 == ARROW_UP) if(max_length == 0){
                 zprint(kb_c);
                 strcpy_i(kb_c);
                 buff_pointer = strlen(kb_c);
-                max_back = buff_pointer;
                 max_length = buff_pointer;
                 }
             if (scan_code_2 == ARROW_LEFT)

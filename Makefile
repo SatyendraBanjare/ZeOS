@@ -1,7 +1,26 @@
-CC = /opt/homebrew/bin/i686-elf-gcc
+# Pick the compiler based on the host OS.
+# Prefer a bare-metal i686-elf cross compiler when available (required on macOS,
+# optional on Linux); otherwise fall back to the host gcc in 32-bit mode.
+UNAME_S := $(shell uname -s)
+CROSS_CC := $(firstword $(wildcard /opt/homebrew/bin/i686-elf-gcc /usr/local/bin/i686-elf-gcc) $(shell command -v i686-elf-gcc 2>/dev/null))
+
+ifneq ($(CROSS_CC),)
+    CC = $(CROSS_CC)
+    LDEXTRA =
+    LIBGCC = -lgcc
+    HOSTFLAGS =
+else ifeq ($(UNAME_S),Linux)
+    CC = gcc
+    LDEXTRA = -m32 -no-pie
+    LIBGCC =
+    # host gcc defines __linux__, which trips the cross-compiler check in main.c
+    HOSTFLAGS = -U__linux__
+else
+    $(error No suitable compiler for $(UNAME_S): install i686-elf-gcc (e.g. `brew install i686-elf-gcc`))
+endif
 AS= nasm
 
-CFLAGS = -I/kernel/include/ -std=gnu99 -ffreestanding -O2 -Wall -Wextra -m32 -march=i386  -fPIC -fno-pie -fno-exceptions -fpermissive -fcommon 
+CFLAGS = -I/kernel/include/ -std=gnu99 -ffreestanding -O2 -Wall -Wextra -m32 -march=i386  -fPIC -fno-pie -fno-exceptions -fpermissive -fcommon $(HOSTFLAGS)
 
 C_DIRS = kernel \
 		 kernel/common \
@@ -25,7 +44,7 @@ all: zeos.iso
 	${AS} -felf32 $< -o $@
 
 zeos.bin: ${OBJ}
-	${CC} -T conf/linker.ld -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc
+	${CC} -T conf/linker.ld -o $@ $(LDEXTRA) -ffreestanding -O2 -nostdlib $^ $(LIBGCC)
 
 # check-multiboot: zeos.bin
 # 	grub-file --is-x86-multiboot zeos.bin

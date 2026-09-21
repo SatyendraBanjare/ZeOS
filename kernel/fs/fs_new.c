@@ -660,15 +660,27 @@ int vfs_change_directory(const char* path) {
     
     vfs_state.current_directory = node;
     
-    // Update current path
-    // For simplicity, we'll just copy the path (in a real implementation, you'd normalize it)
-    int len = strlen((char*)path);
-    if (len >= MAX_PATH_LENGTH) len = MAX_PATH_LENGTH - 1;
-    for (int i = 0; i < len; i++) {
-        vfs_state.current_path[i] = path[i];
+    // Rebuild the absolute path from root by walking up the parent chain
+    vfs_node_t* chain[MAX_PATH_LENGTH / 2];
+    int depth = 0;
+    for (vfs_node_t* n = node; n && n != vfs_state.root && depth < MAX_PATH_LENGTH / 2;
+         n = n->data.directory.parent) {
+        chain[depth++] = n;
     }
-    vfs_state.current_path[len] = '\0';
-    
+
+    int pos = 0;
+    if (depth == 0) {
+        vfs_state.current_path[pos++] = '/';
+    }
+    for (int i = depth - 1; i >= 0 && pos < MAX_PATH_LENGTH - 1; i--) {
+        vfs_state.current_path[pos++] = '/';
+        const char* name = chain[i]->data.directory.name;
+        for (int j = 0; name[j] && pos < MAX_PATH_LENGTH - 1; j++) {
+            vfs_state.current_path[pos++] = name[j];
+        }
+    }
+    vfs_state.current_path[pos] = '\0';
+
     return VFS_SUCCESS;
 }
 

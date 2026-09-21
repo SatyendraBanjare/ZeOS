@@ -133,12 +133,12 @@ void manage_input(char *input){
     print_log("RECEIVED INPUT");
     print_log(input);
 
-    if (strcmp(input, "END") == 0) {
+    if (strcmp(input, "end") == 0) {
         zprint("Stopping the CPU. Bye!\n");
         asm volatile("hlt");
-    } else if (strcmp (input, "CLEAR") == 0){
+    } else if (strcmp (input, "clear") == 0){
         clear_screen();
-    } else if (strcmp (input, "HELP") == 0){
+    } else if (strcmp (input, "help") == 0){
         zprint("Available commands:\n");
         zprint("  ls [path]       - list directory contents\n");
         zprint("  mkdir <path>    - create directory\n");
@@ -177,9 +177,7 @@ void manage_input(char *input){
         zprint("Unknown command. Type 'help' for available commands.\n");
     }
     
-    zprint("\n");	
-    zprint_new_line(get_alias());
-    zprint_new_line("> ");
+    zprint("\n");
 }
 
 
@@ -221,11 +219,74 @@ int getWords(char *base, char target[20][20])
 
 
 
+/*
+ * echo <text> [> file]
+ * Parsed from the original (case-preserved) line. Double quotes group words and
+ * are removed from the output; a '>' inside quotes is literal text.
+ */
+static void handle_echo(const char *raw) {
+    char text[100];
+    char file[MAX_FILENAME_LENGTH];
+    int t = 0, f = 0;
+    int in_quote = 0, redirect = 0, pending_space = 0;
+    int i = 4; // skip "echo"
+
+    while (raw[i] == ' ') i++;
+
+    for (; raw[i]; i++) {
+        char c = raw[i];
+        if (c == '"') {
+            in_quote = !in_quote;
+            if (redirect == 0 && pending_space && t > 0) { text[t++] = ' '; }
+            pending_space = 0;
+            continue;
+        }
+        if (!in_quote && c == '>' && !redirect) {
+            redirect = 1;
+            pending_space = 0;
+            continue;
+        }
+        if (!in_quote && c == ' ') {
+            pending_space = 1;
+            continue;
+        }
+        if (redirect) {
+            if (f < MAX_FILENAME_LENGTH - 1) {
+                file[f++] = (c >= 'A' && c <= 'Z') ? c + 32 : c;
+            }
+        } else {
+            if (pending_space && t > 0 && t < 99) { text[t++] = ' '; }
+            pending_space = 0;
+            if (t < 99) text[t++] = c;
+        }
+    }
+    text[t] = '\0';
+    file[f] = '\0';
+
+    if (in_quote) {
+        zprint("echo: unterminated quote\n");
+    } else if (redirect) {
+        if (f == 0) {
+            zprint("echo: missing file name\n");
+        } else {
+            vfs_shell_echo(text, file);
+        }
+    } else {
+        zprint(text);
+        zprint("\n");
+    }
+}
+
 void user_input(char *input) {
     int n; //number of words
     int i; //loop counter 
     char arr[20][20];
-    
+    char raw[100];
+
+    // Keep the original line: echo needs its case and quoted spacing intact
+    for (i = 0; i < 99 && input[i]; i++) raw[i] = input[i];
+    raw[i] = '\0';
+
     strip_extra_spaces(input);
     
     // Convert input to lowercase for case-insensitive commands
@@ -276,18 +337,8 @@ void user_input(char *input) {
         } else {
             zprint("cat: missing file name\n");
         }
-    } else if (n >= 1 && strcmp(arr[0], "echo") == 0) {
-        // Handle echo with potential redirection
-        if (n >= 3 && strcmp(arr[2], ">") == 0 && strcmp(arr[3], "\0") != 0) {
-            // Echo to file: echo text > filename
-            vfs_shell_echo(arr[1], arr[3]);
-        } else if (strcmp(arr[1], "\0") != 0) {
-            // Just echo to screen
-            zprint(arr[1]);
-            zprint("\n");
-        } else {
-            zprint("echo: missing text\n");
-        }
+    } else if (strcmp(arr[0], "echo") == 0) {
+        handle_echo(raw);
     } else {
         // Handle other commands or single word input
         manage_input(input);
