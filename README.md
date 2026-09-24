@@ -45,6 +45,8 @@ Operating system Hobby Project
   + [ ] Mini REPL-interpreter
   + [ ] Calculator
 
+<img src="./zeos.gif" alt="Alt Text" width="800" />
+
 
 ### Resources
 
@@ -74,3 +76,5 @@ write on
 - briefly explain all the assembly instructions used throughout
 - how to make the iso file
 - how file sys is created & implemented
+
+[def]: ./zeos.gif
