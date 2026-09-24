@@ -63,14 +63,18 @@ loader :
     or  edx, KERNEL_PT_CFG
     mov [ecx], edx
 
+    ; map the first 4 MB of physical memory (the whole page table), not just the
+    ; kernel image, so GRUB modules such as the initrd (loaded right after the
+    ; kernel) are reachable at 0xC0000000 + physical address
     mov eax, (kernel_pt - KERNEL_VIRTUAL_BASE)
     mov ecx, KERNEL_PT_CFG
+    mov edx, 1024
 .loop:
     mov [eax], ecx
     add eax, 4
     add ecx, 0x1000
-    cmp ecx, kernel_physical_end
-    jle .loop
+    dec edx
+    jnz .loop
     
     mov ecx, (kernel_pdt - KERNEL_VIRTUAL_BASE)
     and ecx, 0xFFFFF000     ; we only care about the upper 20 bits

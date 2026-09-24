@@ -1,0 +1,4 @@
+ZeOS initrd
+
+These files were packed into initrd.img at build time and
+extracted into the virtual file system under /initrd at boot.

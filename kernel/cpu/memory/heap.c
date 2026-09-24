@@ -13,7 +13,8 @@
 #define HEAP_ALIGN      8
 #define HEAP_MAGIC      0xC0DEB10C
 #define HEAP_MIN_SPLIT  16                 /* smallest useful payload */
-#define HEAP_STACK_GUARD 0x10000           /* keep 64 KB free below the stack */
+#define HEAP_REGION_SIZE 0x100000          /* heap + main kernel stack share 1 MB */
+#define MAIN_STACK_RESERVE 0x40000         /* top 256 KB is left for the main stack */
 
 typedef struct heap_block {
 	uint32_t magic;
@@ -25,6 +26,18 @@ typedef struct heap_block {
 } heap_block_t;
 
 #define HEADER_SIZE ((uint32_t)sizeof(heap_block_t))
+
+/* The heap can be entered from any thread and from interrupt handlers, so every
+ * public entry point masks interrupts. The saved flags make this nest safely. */
+static inline uint32_t heap_lock(void) {
+	uint32_t flags;
+	asm volatile("pushf; pop %0; cli" : "=r"(flags) : : "memory");
+	return flags;
+}
+
+static inline void heap_unlock(uint32_t flags) {
+	asm volatile("push %0; popf" : : "r"(flags) : "memory", "cc");
+}
 
 static uint8_t *heap_start = NULL;
 static uint8_t *heap_brk = NULL;            /* first byte past the last block */
@@ -43,10 +56,10 @@ static void heap_init(void) {
 /* Grow the heap by one block of `size` payload bytes; NULL if out of memory. */
 static heap_block_t *heap_extend(uint32_t size) {
 	uint32_t total = HEADER_SIZE + size;
-	uint8_t *limit = (uint8_t *)get_current_stack_pointer() - HEAP_STACK_GUARD;
+	uint8_t *limit = heap_start + (HEAP_REGION_SIZE - MAIN_STACK_RESERVE);
 
 	if (heap_brk + total > limit || heap_brk + total < heap_brk) {
-		print_log("Heap: out of memory (would collide with stack)");
+		print_log("Heap: out of memory");
 		return NULL;
 	}
 
@@ -87,7 +100,7 @@ static void heap_split(heap_block_t *b, uint32_t size) {
 	}
 }
 
-void *malloc(uint32_t bytes) {
+static void *malloc_locked(uint32_t bytes) {
 	if (!heap_start) heap_init();
 	if (bytes == 0) bytes = 1;
 	bytes = (uint32_t)align_up(bytes);
@@ -104,7 +117,7 @@ void *malloc(uint32_t bytes) {
 	return b ? (void *)((uint8_t *)b + HEADER_SIZE) : NULL;
 }
 
-void free(void *ptr) {
+static void free_locked(void *ptr) {
 	if (!ptr) return;
 
 	heap_block_t *b = (heap_block_t *)((uint8_t *)ptr - HEADER_SIZE);
@@ -145,6 +158,19 @@ void free(void *ptr) {
 	}
 }
 
+void *malloc(uint32_t bytes) {
+	uint32_t f = heap_lock();
+	void *p = malloc_locked(bytes);
+	heap_unlock(f);
+	return p;
+}
+
+void free(void *ptr) {
+	uint32_t f = heap_lock();
+	free_locked(ptr);
+	heap_unlock(f);
+}
+
 void *calloc(uint32_t count, uint32_t size) {
 	if (size != 0 && count > 0xFFFFFFFFu / size) return NULL;
 	uint32_t total = count * size;
@@ -155,7 +181,7 @@ void *calloc(uint32_t count, uint32_t size) {
 	return p;
 }
 
-void *realloc(void *ptr, uint32_t bytes) {
+static void *realloc_locked(void *ptr, uint32_t bytes) {
 	if (!ptr) return malloc(bytes);
 	if (bytes == 0) { free(ptr); return NULL; }
 
@@ -179,6 +205,13 @@ void *realloc(void *ptr, uint32_t bytes) {
 	return n;
 }
 
+void *realloc(void *ptr, uint32_t bytes) {
+	uint32_t f = heap_lock();
+	void *r = realloc_locked(ptr, bytes);
+	heap_unlock(f);
+	return r;
+}
+
 uint32_t heap_used_bytes(void) {
 	uint32_t used = 0;
 	for (heap_block_t *b = heap_head; b; b = b->next) {
@@ -188,11 +221,12 @@ uint32_t heap_used_bytes(void) {
 }
 
 void heap_get_stats(heap_stats_t *st) {
+	uint32_t f = heap_lock();
 	if (!heap_start) heap_init();
 
 	st->heap_start = (uint32_t)(uintptr_t)heap_start;
 	st->heap_end = (uint32_t)(uintptr_t)heap_brk;
-	st->heap_limit = (uint32_t)(uintptr_t)((uint8_t *)get_current_stack_pointer() - HEAP_STACK_GUARD);
+	st->heap_limit = (uint32_t)(uintptr_t)(heap_start + (HEAP_REGION_SIZE - MAIN_STACK_RESERVE));
 	st->used_bytes = 0;
 	st->free_bytes = 0;
 	st->overhead_bytes = 0;
@@ -211,4 +245,5 @@ void heap_get_stats(heap_stats_t *st) {
 			st->used_blocks++;
 		}
 	}
+	heap_unlock(f);
 }

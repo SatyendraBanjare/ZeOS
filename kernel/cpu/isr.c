@@ -3,6 +3,7 @@
 #include "../include/cpu/util.h"
 #include "../include/cpu/pic.h"
 #include "../include/cpu/timer.h"
+#include "../include/cpu/thread.h"
 #include "../include/terminal/terminal.h"
 #include "../include/drivers/keyboard.h"
 
@@ -94,4 +95,9 @@ void interrupt_handler(struct cpu_state cpu) {
   }
 
   pic_acknowledge();
+
+  // Preempt only after the EOI, otherwise the PIC would block further IRQs
+  if (cpu.int_no == 32) {
+    scheduler_tick();
+  }
 }

@@ -9,6 +9,8 @@ footer : current work directory , arg counts
 
 #include "../include/shell/shell.h"
 #include "../include/fs/fs.h"
+#include "../include/cpu/thread.h"
+#include "../include/fs/initrd.h"
 
 char * alias = "Zeus";
 // int uptime;
@@ -182,7 +184,9 @@ static void show_memory_usage(){
     heap_stats_t st;
     heap_get_stats(&st);
 
-    uint32_t stack_top = (uint32_t)(uintptr_t)&kernel_stack_lowest_address + 0x100000;
+    uint32_t stack_base, stack_size;
+    thread_stack_bounds(&stack_base, &stack_size);
+    uint32_t stack_top = stack_base + stack_size;
     uint32_t esp = (uint32_t)(uintptr_t)get_current_stack_pointer();
 
     zprint("Kernel heap:\n");
@@ -194,9 +198,149 @@ static void show_memory_usage(){
     print_mem_line("  largest free  : ", st.largest_free);
     print_mem_count("  blocks used   : ", st.used_blocks);
     print_mem_count("  blocks free   : ", st.free_blocks);
-    zprint("Kernel stack:\n");
-    print_mem_line("  in use        : ", stack_top > esp ? stack_top - esp : 0);
-    print_mem_line("  total         : ", 0x100000);
+    zprint("Stack (running thread):\n");
+    print_mem_line("  in use        : ", (esp >= stack_base && esp < stack_top) ? stack_top - esp : 0);
+    print_mem_line("  total         : ", stack_size);
+}
+
+/* ---- kernel threads: demo bodies and shell commands ---- */
+
+// Spins forever; shows that the scheduler preempts a thread that never yields
+static void demo_counter(void *arg){
+    (void)arg;
+    thread_t *me = thread_current();
+    while (1) *(volatile uint32_t *)&me->work += 1;
+}
+
+// Does a little work, then sleeps half a second
+static void demo_ticker(void *arg){
+    (void)arg;
+    thread_t *me = thread_current();
+    while (1) {
+        *(volatile uint32_t *)&me->work += 1;
+        thread_sleep(25);
+    }
+}
+
+// Finite job: exits on its own and gets reaped
+static void demo_burst(void *arg){
+    (void)arg;
+    thread_t *me = thread_current();
+    for (uint32_t i = 0; i < 3000000; i++) *(volatile uint32_t *)&me->work += 1;
+}
+
+static void print_padded(char *text, int width){
+    int len = strlen(text);
+    zprint(text);
+    for (int i = len; i < width; i++) zprint(" ");
+}
+
+static void print_padded_int(uint32_t n, int width){
+    char num[16];
+    int_to_ascii((int)n, num);
+    print_padded(num, width);
+}
+
+/* ps - list kernel threads */
+static void show_threads(){
+    zprint("ID  NAME        STATE     TICKS   WORK\n");
+    for (thread_t *t = thread_first(); t; t = t->next) {
+        print_padded_int(t->id, 4);
+        print_padded(t->name, 12);
+        print_padded((char*)thread_state_name(t->state), 10);
+        print_padded_int(t->run_ticks, 8);
+        print_padded_int(t->work, 10);
+        zprint("\n");
+    }
+}
+
+static int parse_uint(char *s){
+    if (!s[0]) return -1;
+    int n = 0;
+    for (int i = 0; s[i]; i++) {
+        if (s[i] < '0' || s[i] > '9') return -1;
+        n = n * 10 + (s[i] - '0');
+    }
+    return n;
+}
+
+static void spawn_thread(char *kind){
+    thread_fn fn = 0;
+    if (strcmp(kind, "counter") == 0) fn = demo_counter;
+    else if (strcmp(kind, "ticker") == 0) fn = demo_ticker;
+    else if (strcmp(kind, "burst") == 0) fn = demo_burst;
+
+    if (!fn) {
+        zprint("spawn: unknown kind (use counter, ticker or burst)\n");
+        return;
+    }
+    int id = thread_create(kind, fn, NULL);
+    if (id < 0) {
+        zprint("spawn: could not create thread (limit or out of memory)\n");
+    } else {
+        zprint("Started thread ");
+        zprint_int(id);
+        zprint(" (");
+        zprint(kind);
+        zprint(")\n");
+    }
+}
+
+static void kill_thread(char *arg){
+    int id = parse_uint(arg);
+    if (id < 0) {
+        zprint("kill: usage: kill <thread id>\n");
+        return;
+    }
+    int r = thread_kill((uint32_t)id);
+    if (r == 0) zprint("Thread killed\n");
+    else if (r == -2) zprint("kill: cannot kill the main thread\n");
+    else zprint("kill: no such thread\n");
+}
+
+/* initrd - show the ramdisk GRUB loaded and how each file was handled */
+static void print_hex(uint32_t v){
+    char buf[11];
+    buf[0] = '0'; buf[1] = 'x';
+    for (int i = 0; i < 8; i++) {
+        int d = (v >> (28 - 4 * i)) & 0xF;
+        buf[2 + i] = d < 10 ? '0' + d : 'a' + (d - 10);
+    }
+    buf[10] = '\0';
+    zprint(buf);
+}
+
+static void show_initrd(){
+    const initrd_info_t *info = initrd_get_info();
+    if (!info->present) {
+        zprint("initrd: no image loaded (no GRUB module)\n");
+        return;
+    }
+
+    zprint("Initrd image:\n");
+    zprint("  location : "); print_hex(info->phys_start);
+    zprint(" - ");           print_hex(info->phys_end);
+    zprint(" (physical)\n");
+    print_mem_line("  size     : ", info->size);
+    print_mem_count("  files    : ", info->file_count);
+    print_mem_count("  extracted: ", info->loaded);
+    zprint("  mounted  : " INITRD_MOUNT "\n");
+
+    if (info->file_count > info->recorded) {
+        zprint("  (only the first ");
+        zprint_int(info->recorded);
+        zprint(" entries are tracked)\n");
+    }
+
+    zprint("\nNAME                  OFFSET  SIZE    STATUS\n");
+    for (uint32_t i = 0; i < info->recorded; i++) {
+        const initrd_entry_t *e = initrd_get_entry(i);
+        print_padded((char*)e->name, 22);
+        print_padded_int(e->offset, 8);
+        print_padded_int(e->length, 8);
+        zprint((char*)initrd_status_name(e->status));
+        zprint("\n");
+    }
 }
 
 static int prompt_printed = 0;   // set when a command already drew the prompt (clear)
@@ -214,6 +358,10 @@ void manage_input(char *input){
     } else if (strcmp (input, "clear") == 0){
         clear_screen(get_alias());
         prompt_printed = 1;
+    } else if (strcmp (input, "initrd") == 0){
+        show_initrd();
+    } else if (strcmp (input, "ps") == 0){
+        show_threads();
     } else if (strcmp (input, "mem") == 0){
         show_memory_usage();
     } else if (strcmp (input, "help") == 0){
@@ -228,6 +376,10 @@ void manage_input(char *input){
         zprint("  echo <text>     - display text (use > file to redirect)\n");
         zprint("  alias           - change user alias\n");
         zprint("  mem             - show kernel heap and stack usage\n");
+        zprint("  initrd          - show the loaded initrd image and its files\n");
+        zprint("  ps              - list kernel threads\n");
+        zprint("  spawn <kind>    - start a demo thread (counter, ticker, burst)\n");
+        zprint("  kill <id>       - stop a thread\n");
         zprint("  time            - show system time\n");
         zprint("  delay           - test delay function\n");
         zprint("  clear           - clear screen\n");
@@ -417,6 +569,12 @@ void user_input(char *input) {
         } else {
             zprint("cat: missing file name\n");
         }
+    } else if (strcmp(arr[0], "spawn") == 0) {
+        if (n >= 1) spawn_thread(arr[1]);
+        else zprint("spawn: usage: spawn <counter|ticker|burst>\n");
+    } else if (strcmp(arr[0], "kill") == 0) {
+        if (n >= 1) kill_thread(arr[1]);
+        else zprint("kill: usage: kill <thread id>\n");
     } else if (strcmp(arr[0], "echo") == 0) {
         handle_echo(raw);
     } else {

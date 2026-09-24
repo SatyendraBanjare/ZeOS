@@ -10,6 +10,8 @@
 #include "include/common/helper.h"
 #include "include/multiboot/multiboot_util.h"
 #include "include/cpu/memory/paging.h"
+#include "include/cpu/thread.h"
+#include "include/fs/initrd.h"
 
 #if defined(__linux__)
 #error "You are not using a cross-compiler, you will most certainly run into trouble"
@@ -60,6 +62,9 @@ void kernel_main(uint32_t mbaddr, uint32_t magic_number,struct kernel_memory_des
 	init_gdt();
 	init_idt();
 
+	// adopt the boot context as thread 0 before the timer can preempt it
+	threads_init();
+
 	// init timer & pic
 	init_timer(50);
 	pic_init();
@@ -67,6 +72,9 @@ void kernel_main(uint32_t mbaddr, uint32_t magic_number,struct kernel_memory_des
 	// clear screen
 	clear_screen_full();
 	init_shell();
+
+	// unpack the GRUB initrd module into the VFS (init_shell created the VFS)
+	initrd_load((struct multiboot_info *) mboot_ptr);
 	
 	// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -95,6 +103,7 @@ void kernel_main(uint32_t mbaddr, uint32_t magic_number,struct kernel_memory_des
 	// print_log("INTERRUPT ISSUE ADDR:");
 	// interrupt();
 	// print_log_int(fault,16);
-	while(1){}
+	// main is the idle thread: sleep until the next interrupt
+	while(1){ asm volatile("hlt"); }
 
 }

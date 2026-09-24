@@ -49,7 +49,13 @@ zeos.bin: ${OBJ}
 # check-multiboot: zeos.bin
 # 	grub-file --is-x86-multiboot zeos.bin
 
-zeos.iso: zeos.bin
+# Pack everything under initrd/ into the ramdisk image loaded by GRUB
+INITRD_FILES = $(shell find initrd -type f)
+
+initrd.img: $(INITRD_FILES) scripts/make_initrd.py
+	python3 scripts/make_initrd.py initrd $@
+
+zeos.iso: zeos.bin initrd.img
 	rm -rf isodir/
 	rm -rf log/
 	mkdir log

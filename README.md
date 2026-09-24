@@ -23,16 +23,18 @@ Operating system Hobby Project
 - [x] basic keyboard input
 - [x] Higher Half Kernel
 - [x] Paging
-- [ ] Heap
-- [ ] MultiTasking
-- [ ] InitRD
+- [x] Heap
+  + [x] malloc
+- [x] MultiTasking (only for kernel threads)
+  + [x] Preemptive Scheduling
+  + [x] thread create and kill using `spawn` and `kill`
+- [x] InitRD
 - [x] VFS
   + [x] Read- Write Capabilities
   + [x] Directory Traversal
   + [x] File Creation/Deletion
   + [x] Directory Creation/Deletion
   + [x] Shell Integration (ls, mkdir, touch, rm, cd, pwd, cat, echo)
-- [ ] Scheduling
 - [ ] User_Mode
 - [ ] PCI ??
 - [ ] Connectivity
